@@ -52,13 +52,13 @@
 
     /* Colonne image gauche */
     .left {
-      flex: 0 0 45%;
+      flex: 0 0 55%;
       position: relative;
       background: #000;
       display: flex;
       align-items: center;
       justify-content: center;
-      aspect-ratio: 1 / 1; /* colonne carrée : même largeur et hauteur */
+      aspect-ratio: 1 / 1; /* colonne carrée pour image carrée */
     }
 
     .cover {
@@ -81,7 +81,7 @@
 
     /* Colonne contenu droite */
     .right {
-      flex: 1 1 55%;
+      flex: 1 1 45%;
       background: linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.98));
       padding: 24px 22px 22px;
       display: flex;
@@ -338,10 +338,6 @@
         <div class="body-text">
           Cette page rassemble le podcast, les slides et la transcription intégrale du dîner-débat X77 consacré
           à l’astronomie des ondes gravitationnelles.
-        </div>
-
-        <div class="footer-note">
-          Ressource préparée pour la promotion X77.
         </div>
       </div>
     </section>
