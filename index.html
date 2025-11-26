@@ -45,7 +45,7 @@
       overflow: hidden;
       border: 1px solid var(--border-soft);
       box-shadow: 0 30px 60px -18px rgba(0, 0, 0, 0.9);
-      min-height: 70vh;
+      /* min-height supprimé pour laisser la hauteur s'ajuster à l'image */
       display: flex;
       flex-direction: row;
     }
@@ -58,6 +58,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      aspect-ratio: 1 / 1; /* colonne carrée : même largeur et hauteur */
     }
 
     .cover {
@@ -66,7 +67,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 12px;
+      padding: 0; /* plus de marge autour de l'image */
     }
 
     .cover img {
@@ -74,7 +75,7 @@
       max-height: 100%;
       height: auto;
       width: auto;
-      object-fit: contain; /* plus de crop */
+      object-fit: contain;
       display: block;
     }
 
@@ -259,6 +260,7 @@
       .left {
         flex: 0 0 auto;
         height: 260px;
+        aspect-ratio: auto;
       }
 
       .right {
@@ -266,7 +268,7 @@
       }
 
       .cover {
-        padding: 8px;
+        padding: 0;
       }
     }
   </style>
