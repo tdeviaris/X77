@@ -8,8 +8,8 @@
   <style>
     :root {
       --bg: #020617;
-      --bg2: #020617;
-      --card-bg: rgba(15, 23, 42, 0.96);
+      --card-bg: #020617;
+      --card-inner: #020617;
       --accent: #f97316;
       --accent-soft: rgba(249, 115, 22, 0.18);
       --text-main: #f9fafb;
@@ -29,28 +29,58 @@
       background: radial-gradient(circle at top, #111827, var(--bg) 60%);
       color: var(--text-main);
       display: flex;
-      align-items: center;
+      align-items: stretch;
       justify-content: center;
       padding: 24px;
     }
 
     main {
       width: 100%;
-      max-width: 920px;
+      max-width: 1200px;
     }
 
-    .card {
+    .shell {
       background: var(--card-bg);
       border-radius: 24px;
+      overflow: hidden;
       border: 1px solid var(--border-soft);
-      box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.9);
-      padding: 24px 20px 24px;
-      backdrop-filter: blur(14px);
+      box-shadow: 0 30px 60px -18px rgba(0, 0, 0, 0.9);
+      min-height: 70vh;
+      display: flex;
+      flex-direction: row;
     }
 
-    @media (min-width: 768px) {
-      .card {
-        padding: 30px 32px 30px;
+    /* Colonne image gauche */
+    .left {
+      flex: 0 0 45%;
+      position: relative;
+      background: #000;
+    }
+
+    .cover {
+      position: absolute;
+      inset: 0;
+    }
+
+    .cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Colonne contenu droite */
+    .right {
+      flex: 1 1 55%;
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.98));
+      padding: 24px 22px 22px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    @media (min-width: 900px) {
+      .right {
+        padding: 30px 32px 28px;
       }
     }
 
@@ -60,13 +90,13 @@
       gap: 8px;
       padding: 4px 12px;
       border-radius: 999px;
-      background: rgba(15, 118, 110, 0.2);
+      background: rgba(15, 118, 110, 0.22);
       border: 1px solid rgba(34, 211, 238, 0.7);
       color: #a5f3fc;
       font-size: 11px;
       text-transform: uppercase;
       letter-spacing: 0.12em;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }
 
     .badge-dot {
@@ -77,69 +107,32 @@
       box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.35);
     }
 
-    .layout {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    @media (min-width: 768px) {
-      .layout {
-        flex-direction: row;
-        align-items: center;
-        gap: 28px;
-      }
-    }
-
-    .cover-wrap {
-      flex-shrink: 0;
-      display: flex;
-      justify-content: center;
-    }
-
-    .cover {
-      width: 230px;
-      height: 230px;
-      border-radius: 32px;
-      overflow: hidden;
-      border: 1px solid var(--border-soft);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.75);
-      background: radial-gradient(circle, #1f2937, #020617);
-    }
-
-    .cover img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .header-text h1 {
-      font-size: 1.8rem;
+    header h1 {
+      font-size: 1.9rem;
       line-height: 1.2;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
 
-    @media (min-width: 768px) {
-      .header-text h1 {
+    @media (min-width: 900px) {
+      header h1 {
         font-size: 2.1rem;
       }
     }
 
-    .header-text h2 {
-      font-size: 0.95rem;
+    header h2 {
+      font-size: 0.98rem;
       font-weight: 500;
       color: var(--text-muted);
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
 
     .meta {
       display: flex;
       flex-wrap: wrap;
-      align-items: center;
       gap: 12px;
       font-size: 0.9rem;
       color: var(--text-muted);
+      margin-bottom: 18px;
     }
 
     .meta span {
@@ -152,16 +145,13 @@
       font-size: 1rem;
     }
 
-    .section {
-      margin-top: 22px;
-    }
-
     .section-title {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       text-transform: uppercase;
       letter-spacing: 0.18em;
       color: var(--text-muted);
       margin-bottom: 6px;
+      margin-top: 10px;
     }
 
     .audio-card {
@@ -222,65 +212,93 @@
       font-size: 1rem;
     }
 
+    .body-text {
+      margin-top: 16px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
     .footer-note {
-      margin-top: 18px;
+      margin-top: auto;
       font-size: 0.8rem;
       color: var(--text-muted);
+      padding-top: 16px;
     }
 
     .footer-note a {
       color: #93c5fd;
       text-decoration: none;
-      border-bottom: 1px solid rgba(147, 197, 253, 0.5);
+      border-bottom: 1px solid rgba(147, 197, 253, 0.6);
     }
 
     .footer-note a:hover {
       border-bottom-color: rgba(147, 197, 253, 1);
+    }
+
+    /* Mobile : pile image puis contenu */
+    @media (max-width: 768px) {
+      body {
+        padding: 16px;
+      }
+
+      .shell {
+        flex-direction: column;
+        min-height: auto;
+      }
+
+      .left {
+        flex: 0 0 auto;
+        height: 260px;
+      }
+
+      .right {
+        padding: 20px 18px 18px;
+      }
     }
   </style>
 </head>
 
 <body>
   <main>
-    <section class="card">
-      <div class="badge">
-        <span class="badge-dot"></span>
-        <span>Dîner-débat X77 · Podcast</span>
+    <section class="shell">
+      <!-- Colonne gauche : image pleine hauteur -->
+      <div class="left">
+        <div class="cover">
+          <img src="Après la vue, l'ouïe.png" alt="Après la vue, l’ouïe – illustration X77">
+        </div>
       </div>
 
-      <div class="layout">
-        <div class="cover-wrap">
-          <div class="cover">
-            <!-- Image carrée : utiliser exactement le nom du fichier -->
-            <img src="Après la vue, l'ouïe.png" alt="Après la vue, l’ouïe – illustration X77">
-          </div>
+      <!-- Colonne droite : titre, audio, liens -->
+      <div class="right">
+        <div class="badge">
+          <span class="badge-dot"></span>
+          <span>Dîner-débat X77 · Podcast</span>
         </div>
 
-        <div class="header-text">
+        <header>
           <h1>Ondes gravitationnelles&nbsp;: après la vue, l’ouïe</h1>
           <h2>Luc Blanchet – Dîner-débat de la promotion X77, 25 novembre 2025</h2>
 
           <div class="meta">
-            <span><span class="meta-icon">⏱️</span> ~11 mn d’écoute </span>
+            <span><span class="meta-icon">⏱️</span> ~11&nbsp;min d’écoute</span>
             <span><span class="meta-icon">🌌</span> Astronomie gravitationnelle</span>
           </div>
-        </div>
-      </div>
+        </header>
 
-      <div class="section">
         <div class="section-title">Écouter</div>
 
         <div class="audio-card">
           <strong>Dîner-débat X77 – Ondes gravitationnelles</strong>
 
           <p class="description">
-            Podcast grand public résumant la présentation d'hier,
+            Podcast grand public résumant la présentation de la veille sur les ondes gravitationnelles,
             animée par <strong>Luc Blanchet</strong>.
           </p>
 
-          <!-- ⚠️ Remplacer NOM_DU_FICHIER_AUDIO.mp3 par le nom exact de ton fichier audio -->
+          <!-- Lecteur audio -->
           <audio controls>
-            <source src="Le_fracas_des_trous_noirs_pour_forger_l_or.m4a" type="audio/mpeg">
+            <source src="Le_fracas_des_trous_noirs_pour_forger_l_or.m4a" type="audio/mp4">
             Votre navigateur ne supporte pas l’élément audio HTML5.
           </audio>
 
@@ -289,21 +307,29 @@
               <span class="button-icon">▶️</span>
               Écouter / télécharger l’audio
             </a>
+
             <a class="button" href="Slides Ondes Gravitationnelles - Luc Blanchet.pdf">
-              <span class="button-icon">📄</span>
+              <span class="button-icon">📊</span>
               Slides de Luc Blanchet (PDF)
             </a>
+
             <a class="button" href="X77-Ondes Gravitationnelles-2025-11-25.pdf">
               <span class="button-icon">📄</span>
-              Transcription textuelle complète du diner débat (PDF)
+              Transcription textuelle complète (PDF)
             </a>
           </div>
         </div>
-      </div>
 
-      <p class="footer-note">
-        Ressource préparée pour la promotion X77.
-      </p>
+        <div class="body-text">
+          Cette page rassemble le podcast, les slides et la transcription intégrale du dîner-débat X77 consacré
+          à l’astronomie des ondes gravitationnelles. Ressource accessible librement à l’ensemble de la promotion.
+        </div>
+
+        <div class="footer-note">
+          Ressource préparée pour la promotion X77 et hébergée sur
+          <a href="https://pages.github.com/" target="_blank" rel="noreferrer">GitHub Pages</a>.
+        </div>
+      </div>
     </section>
   </main>
 </body>
