@@ -1,0 +1,10 @@
+# Gros fichiers vidéo (hébergés sur GitHub Releases)
+*.mp4
+*.m4a
+
+# Fichiers temporaires
+Icon
+*.docx
+
+# macOS
+.DS_Store
