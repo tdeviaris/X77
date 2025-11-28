@@ -1,9 +1,10 @@
 # Gros fichiers vidéo (hébergés sur GitHub Releases)
 *.mp4
 *.m4a
+!Le_fracas_des_trous_noirs_pour_forger_l_or.m4a
 
 # Fichiers temporaires
-Icon
+Icon*
 *.docx
 
 # macOS
