@@ -2,348 +2,63 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Dîner-débat X77 – Ondes gravitationnelles</title>
+  <title>Dîners-débats X77</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <style>
-    :root {
-      --bg: #020617;
-      --card-bg: #020617;
-      --card-inner: #020617;
-      --accent: #f97316;
-      --accent-soft: rgba(249, 115, 22, 0.18);
-      --text-main: #f9fafb;
-      --text-muted: #9ca3af;
-      --border-soft: rgba(148, 163, 184, 0.4);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      min-height: 100vh;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-      background: radial-gradient(circle at top, #111827, var(--bg) 60%);
-      color: var(--text-main);
-      display: flex;
-      align-items: stretch;
-      justify-content: center;
-      padding: 24px;
-    }
-
-    main {
-      width: 100%;
-      max-width: 1500px;
-    }
-
-    .shell {
-      background: var(--card-bg);
-      border-radius: 24px;
-      overflow: hidden;
-      border: 1px solid var(--border-soft);
-      box-shadow: 0 30px 60px -18px rgba(0, 0, 0, 0.9);
-      /* min-height supprimé pour laisser la hauteur s'ajuster à l'image */
-      display: flex;
-      flex-direction: row;
-    }
-
-    /* Colonne image gauche */
-    .left {
-      flex: 0 0 50%;
-      position: relative;
-      background: #000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      aspect-ratio: 1 / 1; /* colonne carrée pour image carrée */
-    }
-
-    .cover {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0; /* plus de marge autour de l'image */
-    }
-
-    .cover img {
-      max-width: 100%;
-      max-height: 100%;
-      height: auto;
-      width: auto;
-      object-fit: contain;
-      display: block;
-    }
-
-    /* Colonne contenu droite */
-    .right {
-      flex: 1 1 45%;
-      background: linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.98));
-      padding: 24px 22px 22px;
-      display: flex;
-      flex-direction: column;
-    }
-
-    @media (min-width: 900px) {
-      .right {
-        padding: 30px 32px 28px;
-      }
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 4px 12px;
-      border-radius: 999px;
-      background: rgba(15, 118, 110, 0.22);
-      border: 1px solid rgba(34, 211, 238, 0.7);
-      color: #a5f3fc;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      margin-bottom: 16px;
-    }
-
-    .badge-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 999px;
-      background: #22c55e;
-      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.35);
-    }
-
-    header h1 {
-      font-size: 1.3rem;
-      line-height: 1.2;
-      margin-bottom: 8px;
-    }
-
-    @media (min-width: 900px) {
-      header h1 {
-        font-size: 1.8rem;
-      }
-    }
-
-    header h2 {
-      font-size: 0.98rem;
-      font-weight: 500;
-      color: var(--text-muted);
-      margin-bottom: 12px;
-    }
-
-    .meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      margin-bottom: 18px;
-    }
-
-    .meta span {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .meta-icon {
-      font-size: 1rem;
-    }
-
-    .section-title {
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
-      color: var(--text-muted);
-      margin-bottom: 6px;
-      margin-top: 10px;
-    }
-
-    .audio-card {
-      margin-top: 4px;
-      padding: 14px 14px 18px;
-      border-radius: 18px;
-      background: radial-gradient(circle at top left, var(--accent-soft), rgba(15, 23, 42, 0.96));
-      border: 1px solid rgba(249, 115, 22, 0.4);
-    }
-
-    .audio-card strong {
-      display: block;
-      margin-bottom: 6px;
-    }
-
-    .description {
-      font-size: 0.93rem;
-      color: var(--text-muted);
-      margin-bottom: 10px;
-    }
-
-    audio, video {
-      width: 100%;
-      margin-top: 6px;
-      filter: drop-shadow(0 8px 20px rgba(15, 23, 42, 0.7));
-    }
-
-    video {
-      border-radius: 8px;
-      max-height: 400px;
-    }
-
-    .links {
-      margin-top: 12px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    a.button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 7px 14px;
-      border-radius: 999px;
-      font-size: 0.9rem;
-      text-decoration: none;
-      border: 1px solid var(--border-soft);
-      color: var(--text-main);
-      background: rgba(15, 23, 42, 0.9);
-      cursor: pointer;
-    }
-
-    a.button.primary {
-      background: linear-gradient(135deg, #f97316, #fb923c);
-      border-color: transparent;
-      color: #111827;
-      font-weight: 600;
-    }
-
-    .button-icon {
-      font-size: 1rem;
-    }
-
-    .body-text {
-      margin-top: 16px;
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      line-height: 1.5;
-    }
-
-    .footer-note {
-      margin-top: auto;
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      padding-top: 16px;
-    }
-
-    .footer-note a {
-      color: #93c5fd;
-      text-decoration: none;
-      border-bottom: 1px solid rgba(147, 197, 253, 0.6);
-    }
-
-    .footer-note a:hover {
-      border-bottom-color: rgba(147, 197, 253, 1);
-    }
-
-    /* Mobile : pile image puis contenu */
-    @media (max-width: 768px) {
-      body {
-        padding: 16px;
-      }
-
-      .shell {
-        flex-direction: column;
-        min-height: auto;
-      }
-
-      .left {
-        flex: 0 0 auto;
-        height: 260px;
-        aspect-ratio: auto;
-      }
-
-      .right {
-        padding: 20px 18px 18px;
-      }
-
-      .cover {
-        padding: 0;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="assets/home-styles.css">
 </head>
 
 <body>
-  <main>
-    <section class="shell">
-      <!-- Colonne gauche : image pleine hauteur, non recadrée -->
-      <div class="left">
-        <div class="cover">
-          <img src="cover.png" alt="Après la vue, l’ouïe – illustration X77">
+  <div class="container">
+    <header>
+      <h1>Dîners-débats X77</h1>
+      <p>Association des polytechniciens de la promotion 1977</p>
+    </header>
+
+    <div class="events-list">
+      <!-- Événement 1 : Juridictions consulaires (le plus récent) -->
+      <a href="diners-debats/2025-02-02-juridictions-consulaires/index.html" class="event-card">
+        <div class="event-image">
+          <img src="diners-debats/2025-02-02-juridictions-consulaires/Tribunal de commerce de Paris.jpg" alt="Juridictions consulaires">
         </div>
-      </div>
-
-      <!-- Colonne droite : titre, audio, liens -->
-      <div class="right">
-        <div class="badge">
-          <span class="badge-dot"></span>
-          <span>Dîner-débat X77 · Podcast</span>
-        </div>
-
-        <header>
-          <h1>Ondes gravitationnelles&nbsp;: après la vue, l’ouïe</h1>
-          <h2>Luc Blanchet – Dîner-débat de la promotion X77, 25 novembre 2025</h2>
-
-        
-        </header>
-
-        <div class="audio-card">
-          <strong>Dîner-débat X77 – Ondes gravitationnelles</strong>
-
-          <p class="description">
-            Podcast de 11 mn résumant la conférence sur les ondes gravitationnelles
-          </p>
-
-          <!-- Lecteur audio -->
-          <audio controls>
-            <source src="Le_fracas_des_trous_noirs_pour_forger_l_or.m4a" type="audio/mp4">
-            Votre navigateur ne supporte pas l'élément audio HTML5.
-          </audio>
-
-          <!-- Lecteur vidéo -->
-          <video controls>
-            <source src="https://github.com/tdeviaris/X77/releases/download/v1-audio-video/Recording.mp4" type="video/mp4">
-            Votre navigateur ne supporte pas l'élément vidéo HTML5.
-          </video>
-
-          <div class="links">
-            <a class="button" href="Slides Ondes Gravitationnelles - Luc Blanchet.pdf" target="_blank" rel="noopener">
-              <span class="button-icon">📊</span>
-              Slides de Luc Blanchet (PDF)
-            </a>
-            <a class="button" href="Synthese_du_diner_debat.pdf" target="_blank" rel="noopener">
-              <span class="button-icon">📊</span>
-              Synthèse du diner débat (PDF)
-            </a>
-            <a class="button" href="X77-Ondes Gravitationnelles-2025-11-25.pdf" target="_blank" rel="noopener">
-              <span class="button-icon">📄</span>
-              Transcription complète enrichie de liens du diner débat (PDF)
-            </a>
+        <div class="event-content">
+          <div class="event-badge">
+            <span class="badge-dot"></span>
+            <span>Récent</span>
           </div>
+          <div class="event-meta">
+            <span>📅 2 février 2026</span>
+            <span>📍 Maison des Polytechniciens</span>
+          </div>
+          <h2 class="event-title">Les juridictions consulaires : quels rôles et quels défis ?</h2>
+          <div class="event-speaker">Patrick Sayer, Président du Tribunal de commerce de Paris</div>
+          <p class="event-description">
+            Le Tribunal des activités économiques de Paris (ex-Tribunal de commerce), présidé par notre camarade Patrick Sayer, est la seule juridiction consulaire au sens strict, composée de juges non professionnels issus du monde des affaires. Cette conférence nous a permis de mieux connaître les principaux enjeux de ces juridictions, qui sont au cœur d'un équilibre délicat entre expertise économique, exigences de l'État de droit, efficacité et rapidité, et indépendance et légitimité démocratique.
+          </p>
         </div>
+      </a>
 
-        <div class="body-text">
-          Cette page rassemble le podcast, les slides, la visio, la synthèse et la transcription enrichie du dîner-débat X77 consacré
-          à l'astronomie des ondes gravitationnelles.
+      <!-- Événement 2 : Ondes gravitationnelles -->
+      <a href="diners-debats/2025-11-25-ondes-gravitationnelles/index.html" class="event-card">
+        <div class="event-image">
+          <img src="diners-debats/2025-11-25-ondes-gravitationnelles/cover.png" alt="Ondes gravitationnelles">
         </div>
-      </div>
-    </section>
-  </main>
+        <div class="event-content">
+          <div class="event-meta">
+            <span>📅 25 novembre 2025</span>
+            <span>📍 Maison des Polytechniciens</span>
+          </div>
+          <h2 class="event-title">Ondes gravitationnelles : après la vue, l'ouïe</h2>
+          <div class="event-speaker">Luc Blanchet, Directeur de recherche CNRS</div>
+          <p class="event-description">
+            Cette conférence rassemble le podcast, les slides, la visio, la synthèse et la transcription enrichie du dîner-débat X77 consacré à l'astronomie des ondes gravitationnelles. Une exploration fascinante de cette nouvelle fenêtre sur l'univers, qui nous permet désormais d'écouter le cosmos après l'avoir observé visuellement pendant des siècles.
+          </p>
+        </div>
+      </a>
+    </div>
+
+    <footer>
+      <p>&copy; 2026 Association X77 – Tous droits réservés</p>
+    </footer>
+  </div>
 </body>
 </html>
