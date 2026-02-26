@@ -5,8 +5,19 @@
 !Podcast.m4a
 
 # Fichiers temporaires
-Icon*
 *.docx
 
 # macOS
 .DS_Store
+._*
+.Spotlight-V100
+.Trashes
+.AppleDouble
+.LSOverride
+
+# Fichiers d'icônes personnalisées macOS
+Icon
+Icon?
+Icon
+**/Icon
+**/Icon?
