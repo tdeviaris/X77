@@ -452,13 +452,21 @@
 
         const url = linkFor(targetName);
         setStatus(el.uploadStatus,
-          '<span class="spinner"></span>Document enregistré. Mise en ligne en cours, ' +
-          'le lien sera actif dans une minute environ…');
+          '<span class="spinner"></span>Document enregistré. Mise en ligne en cours : ' +
+          'le lien devient actif au bout de deux à trois minutes…');
 
-        await waitUntilOnline(url);
+        const online = await waitUntilOnline(url);
+        const lien = '<a href="' + url + '" style="color:var(--accent)">' + url + '</a>';
 
-        setStatus(el.uploadStatus,
-          '✓ En ligne : <a href="' + url + '" style="color:var(--accent)">' + url + '</a>', 'ok');
+        if (online) {
+          setStatus(el.uploadStatus, '✓ En ligne : ' + lien, 'ok');
+        } else {
+          // Le document est bien enregistré ; seule la mise en ligne tarde.
+          setStatus(el.uploadStatus,
+            'Document enregistré, mais la mise en ligne prend plus de temps que prévu. ' +
+            'Le lien finira par fonctionner : ' + lien + '<br>' +
+            'Vérifiez-le avant de le transmettre.', 'warn');
+        }
 
         resetFileField();
         loadDocs();
@@ -491,7 +499,7 @@
     // GitHub Pages redéploie le site après le commit : on sonde le lien
     // jusqu'à ce qu'il réponde, plutôt que de faire attendre devant un écran figé.
     async function waitUntilOnline(url) {
-      const deadline = Date.now() + 3 * 60 * 1000;
+      const deadline = Date.now() + 6 * 60 * 1000;
       while (Date.now() < deadline) {
         await new Promise(r => setTimeout(r, 5000));
         try {
