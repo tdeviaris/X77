@@ -109,6 +109,8 @@
 
     button.ghost:hover:not(:disabled) { color: var(--text-main); border-color: var(--accent); }
 
+    button.danger:hover:not(:disabled) { color: var(--err); border-color: var(--err); }
+
     #drop {
       border: 2px dashed var(--border-soft);
       border-radius: 14px;
@@ -595,9 +597,51 @@
           setTimeout(() => { copy.textContent = 'Copier le lien'; }, 2000);
         });
 
-        row.append(name, size, copy);
+        const del = document.createElement('button');
+        del.className = 'ghost danger';
+        del.type = 'button';
+        del.textContent = 'Supprimer';
+        del.addEventListener('click', () => removeDoc(doc, del));
+
+        row.append(name, size, copy, del);
         el.docs.appendChild(row);
       });
+    }
+
+    async function removeDoc(doc, button) {
+      const ok = confirm(
+        'Supprimer définitivement « ' + doc.name + ' » ?\n\n' +
+        'Le lien cessera de fonctionner. Si vous l\'avez déjà transmis, ' +
+        'vos correspondants obtiendront une erreur.'
+      );
+      if (!ok) return;
+
+      button.disabled = true;
+      button.textContent = 'Suppression…';
+
+      try {
+        const res = await github('/contents/' + FOLDER + '/' + encodeURIComponent(doc.name), {
+          method: 'DELETE',
+          body: JSON.stringify({
+            message: 'Suppression du document ' + doc.name,
+            sha: doc.sha,
+            branch: BRANCH
+          })
+        });
+
+        if (!res.ok) throw new Error(await explain(res));
+
+        setStatus(el.uploadStatus,
+          '« ' + doc.name + ' » a été supprimé. Le lien peut rester actif ' +
+          'encore deux à trois minutes, le temps de la mise à jour du site.', 'warn');
+
+        loadDocs();
+
+      } catch (err) {
+        setStatus(el.uploadStatus, err.message, 'err');
+        button.disabled = false;
+        button.textContent = 'Supprimer';
+      }
     }
 
     refreshPublishState();
