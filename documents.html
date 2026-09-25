@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Documents – X77</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="assets/home-styles.css">
+  <style>
+    .docs-container { max-width: 1000px; margin: 0 auto; }
+
+    .back {
+      display: inline-block;
+      margin-bottom: 24px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.95rem;
+    }
+    .back:hover { color: var(--accent); }
+
+    .intro {
+      color: var(--text-muted);
+      font-size: 0.98rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    /* L'affichage Google Drive est clair : on l'insère dans un cadre arrondi. */
+    .drive-frame {
+      background: #ffffff;
+      border: 1px solid var(--border-soft);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .drive-frame iframe {
+      display: block;
+      width: 100%;
+      height: 640px;
+      border: 0;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 12px 22px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #f97316, #fb923c);
+      color: #1f2937;
+      font-weight: 600;
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: transform 0.15s ease;
+    }
+    .button:hover { transform: translateY(-1px); }
+
+    @media (max-width: 600px) {
+      .drive-frame iframe { height: 520px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container docs-container">
+    <a class="back" href="index.html">← Retour aux dîners-débats</a>
+
+    <header>
+      <h1>Documents</h1>
+      <p>Comptes rendus, synthèses et pièces de la promotion 1977</p>
+    </header>
+
+    <p class="intro">
+      Cliquez sur un document pour l'ouvrir ou le télécharger.
+      La liste se met à jour dès qu'un document est ajouté.
+    </p>
+
+    <div class="drive-frame">
+      <iframe
+        src="https://drive.google.com/embeddedfolderview?id=15I0FrW7J-42B-2GRHU3NQwAfTnOF-Y4N#list"
+        title="Documents X77"
+        loading="lazy"></iframe>
+    </div>
+
+    <div class="actions">
+      <a class="button"
+         href="https://drive.google.com/drive/folders/15I0FrW7J-42B-2GRHU3NQwAfTnOF-Y4N"
+         target="_blank" rel="noopener">Ouvrir le dossier dans Google Drive</a>
+    </div>
+
+    <footer>
+      <p>&copy; 2026 Association X77 – Tous droits réservés</p>
+    </footer>
+  </div>
+</body>
+</html>
