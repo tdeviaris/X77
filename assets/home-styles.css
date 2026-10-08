@@ -110,6 +110,7 @@ header p {
   padding: 24px 28px;
   display: flex;
   flex-direction: column;
+  justify-content: center;
 }
 
 .event-meta {
@@ -145,7 +146,6 @@ header p {
   font-size: 0.95rem;
   color: var(--text-muted);
   line-height: 1.6;
-  margin-top: auto;
 }
 
 .event-badge {
