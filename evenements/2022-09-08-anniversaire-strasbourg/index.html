@@ -135,7 +135,8 @@
         if (window.innerWidth < 900) { v.style.width = ''; fig.style.width = ''; return; }
         shell.style.alignItems = 'flex-start';
         for (var i = 0; i < 4; i++) {
-          var other = left.getBoundingClientRect().height - v.getBoundingClientRect().height;
+          var duo = left.querySelector('.duo'), cap = fig.querySelector('figcaption');
+          var other = left.getBoundingClientRect().height - duo.getBoundingClientRect().height + cap.getBoundingClientRect().height + 8;
           var h = right.getBoundingClientRect().height - other;
           var w = Math.max(200, Math.min(h * 9 / 16, left.clientWidth * 0.6));
           v.style.width = w + 'px'; fig.style.width = w + 'px';
