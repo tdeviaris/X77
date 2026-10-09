@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Photos – Anniversaire X77 à Strasbourg</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --bg: #020617;
+      --panel: #0b1222;
+      --accent: #f97316;
+      --accent-soft: rgba(249, 115, 22, 0.18);
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --border-soft: rgba(148, 163, 184, 0.4);
+      --side: 270px;
+      --thumb: 220px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      background: radial-gradient(circle at top, #111827, var(--bg) 60%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      overflow: hidden;
+    }
+    .app { display: flex; height: 100vh; }
+
+    /* Colonne des rubriques */
+    aside {
+      flex: 0 0 var(--side);
+      width: var(--side);
+      border-right: 1px solid var(--border-soft);
+      background: rgba(2, 6, 23, 0.85);
+      display: flex;
+      flex-direction: column;
+      padding: 26px 18px 18px;
+      gap: 6px;
+      overflow-y: auto;
+      z-index: 20;
+    }
+    .brand { font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+    aside h1 { font-size: 1.35rem; line-height: 1.25; margin: 6px 0 4px; }
+    .sub { color: var(--text-muted); font-size: 0.88rem; margin-bottom: 18px; }
+    aside a.brand, aside h1 a { color: inherit; text-decoration: none; }
+    aside a.brand:hover, aside h1 a:hover { color: var(--accent); }
+    aside a.brand:hover { text-decoration: underline; }
+    aside h1 a::after { content: " ↩"; font-size: 0.8em; color: var(--text-muted); }
+    .sous-titre { color: var(--text-main); font-weight: 600; font-size: 1rem; margin: -2px 0 4px; }
+    .rubrique {
+      display: flex; justify-content: space-between; align-items: center;
+      width: 100%; text-align: left;
+      background: transparent; color: var(--text-main);
+      border: 1px solid transparent; border-radius: 999px;
+      padding: 9px 14px; font: inherit; font-size: 0.95rem; cursor: pointer;
+      transition: background .15s, border-color .15s;
+    }
+    .rubrique:hover { background: rgba(148, 163, 184, 0.10); }
+    .rubrique.active { background: var(--accent-soft); border-color: var(--accent); }
+    .rubrique .n { color: var(--text-muted); font-size: 0.8rem; font-variant-numeric: tabular-nums; }
+    .rubrique.active .n { color: var(--accent); }
+    .jour { color: var(--accent); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; margin: 14px 14px 4px; }
+    .sep { border-top: 1px solid rgba(148,163,184,0.2); margin: 8px 4px; }
+    .credits { margin-top: auto; padding-top: 18px; color: var(--text-muted); font-size: 0.78rem; line-height: 1.45; }
+    .back {
+      margin-top: 8px; padding-top: 4px;
+      color: var(--text-muted); font-size: 0.85rem; text-decoration: none;
+    }
+    .back:hover { color: var(--accent); }
+
+    /* Zone principale */
+    .main { flex: 1; display: flex; flex-direction: column; min-width: 0; position: relative; }
+    .toolbar {
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      padding: 20px 28px 14px; border-bottom: 1px solid rgba(148,163,184,0.18);
+    }
+    .toolbar h2 { font-size: 1.15rem; font-weight: 600; }
+    .toolbar h2 small { color: var(--text-muted); font-weight: 400; font-size: 0.9rem; margin-left: 8px; }
+    .zoom { display: flex; align-items: center; gap: 10px; color: var(--text-muted); font-size: 0.85rem; }
+    .zoom svg { width: 16px; height: 16px; fill: currentColor; }
+    input[type=range] { width: 170px; accent-color: var(--accent); cursor: pointer; }
+    .grid-wrap { flex: 1; overflow-y: auto; padding: 22px 28px 40px; }
+    .section-title {
+      color: var(--accent); font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase;
+      font-weight: 600; margin: 8px 0 12px;
+    }
+    .section-title:not(:first-child) { margin-top: 30px; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(var(--thumb), 1fr));
+      gap: 12px;
+    }
+    .thumb {
+      position: relative; aspect-ratio: 4 / 3; border-radius: 10px; overflow: hidden;
+      background: #0f172a; border: 1px solid rgba(148,163,184,0.25);
+      cursor: zoom-in; padding: 0;
+    }
+    .thumb.portrait { aspect-ratio: auto; display: flex; flex-direction: column; }
+    .thumb.portrait img { aspect-ratio: 3 / 4; height: auto; flex: none; }
+    .thumb.portrait .cap { position: static; background: none; font-size: 1.2rem; line-height: 1.12; white-space: normal; overflow-wrap: anywhere; text-overflow: clip; text-align: center; font-weight: 600; padding: 10px 8px 12px; }
+    .vtitle.trombi { font-size: 1.8rem; font-weight: 600; }
+    .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .25s; }
+    .thumb:hover img { transform: scale(1.04); }
+    .thumb:hover, .thumb:focus-visible { border-color: var(--accent); outline: none; }
+    .thumb .cap {
+      position: absolute; left: 0; right: 0; bottom: 0;
+      padding: 18px 10px 7px; font-size: 0.8rem; text-align: left; color: #fff;
+      background: linear-gradient(transparent, rgba(0,0,0,0.75));
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+
+    /* Visionneuse : couvre tout sauf la colonne des rubriques */
+    .viewer {
+      position: fixed; top: 0; right: 0; bottom: 0; left: var(--side);
+      background: rgba(2, 6, 23, 0.97);
+      display: none; flex-direction: column; z-index: 10;
+    }
+    .viewer.open { display: flex; }
+    .vbar {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 14px 20px; border-bottom: 1px solid rgba(148,163,184,0.18);
+    }
+    .vtitle { font-size: 1rem; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .vtitle span { color: var(--text-muted); font-size: 0.85rem; margin-left: 10px; }
+    .vactions { display: flex; gap: 10px; flex-shrink: 0; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      border-radius: 999px; border: 1px solid var(--border-soft);
+      background: transparent; color: var(--text-main); text-decoration: none;
+      padding: 8px 15px; font: inherit; font-size: 0.88rem; cursor: pointer;
+      transition: border-color .15s, background .15s;
+    }
+    .btn:hover { border-color: var(--accent); background: var(--accent-soft); }
+    .btn.primary { background: var(--accent); border-color: var(--accent); color: #111827; font-weight: 600; }
+    .btn.primary:hover { filter: brightness(1.08); }
+    .btn svg { width: 15px; height: 15px; fill: currentColor; }
+    .stage { flex: 1; position: relative; display: flex; align-items: center; justify-content: center; min-height: 0; padding: 18px 70px; }
+    .stage img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px; box-shadow: 0 20px 50px -10px rgba(0,0,0,0.8); user-select: none; }
+    .nav {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 46px; height: 46px; border-radius: 50%;
+      border: 1px solid var(--border-soft); background: rgba(15,23,42,0.75); color: var(--text-main);
+      font-size: 1.5rem; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    }
+    .nav:hover { border-color: var(--accent); color: var(--accent); }
+    .nav.prev { left: 14px; } .nav.next { right: 14px; }
+    .hint { text-align: center; color: var(--text-muted); font-size: 0.78rem; padding: 0 0 12px; }
+
+    @media (max-width: 760px) {
+      :root { --side: 0px; }
+      body { overflow: auto; }
+      .app { flex-direction: column; height: auto; }
+      aside { flex: none; width: 100%; padding: 16px; border-right: 0; border-bottom: 1px solid var(--border-soft); }
+      .rubriques { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; }
+      .rubrique { width: auto; white-space: nowrap; gap: 8px; }
+      .sep, .back, .jour { display: none; }
+      .credits { display: block; margin: 8px 0 0; padding-top: 0; }
+      .sub { margin-bottom: 10px; }
+      .grid-wrap { overflow: visible; padding: 16px; }
+      .toolbar { padding: 14px 16px; flex-wrap: wrap; }
+      input[type=range] { width: 120px; }
+      .stage { padding: 10px; }
+      .nav { width: 38px; height: 38px; }
+      .btn .lbl { display: none; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <aside>
+    <a class="brand" href="../../index.html" title="Retour à l'accueil du site">X77 · Événements</a>
+    <h1><a href="index.html" title="Retour à la page de l'événement">Anniversaire à Strasbourg</a></h1>
+    <div class="sub">8 – 11 septembre 2022 · <span id="total"></span> photos</div>
+    <nav class="rubriques" id="rubriques"></nav>
+    <div class="credits">Photos : Tristan de Viaris ; « Petit souvenir » : Patrick Tejedor.</div>
+    <a class="back" href="index.html">← Retour à la page de l'événement</a>
+  </aside>
+
+  <section class="main">
+    <div class="toolbar">
+      <h2 id="titre"></h2>
+      <label class="zoom" title="Taille des vignettes">
+        <svg viewBox="0 0 24 24"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/></svg>
+        <input type="range" id="taille" min="120" max="520" step="10" value="160" aria-label="Taille des vignettes">
+        <svg viewBox="0 0 24 24" style="width:20px;height:20px"><path d="M3 3h18v18H3z"/></svg>
+      </label>
+    </div>
+    <div class="grid-wrap" id="grille"></div>
+  </section>
+</div>
+
+<div class="viewer" id="viewer" aria-hidden="true">
+  <div class="vbar">
+    <div class="vtitle" id="vtitle"></div>
+    <div class="vactions">
+      <a class="btn primary" id="dl" download>
+        <svg viewBox="0 0 24 24"><path d="M11 3h2v10.17l3.59-3.58L18 11l-6 6-6-6 1.41-1.41L11 13.17zM5 19h14v2H5z"/></svg>
+        <span class="lbl">Télécharger</span>
+      </a>
+      <button class="btn" id="fermer" title="Fermer (Échap)">
+        <svg viewBox="0 0 24 24"><path d="M18.3 5.71 12 12.01l-6.3-6.3-1.41 1.41 6.3 6.3-6.3 6.29 1.41 1.42 6.3-6.3 6.29 6.3 1.42-1.42-6.3-6.29 6.3-6.3z"/></svg>
+        <span class="lbl">Fermer</span>
+      </button>
+    </div>
+  </div>
+  <div class="stage">
+    <button class="nav prev" id="prec" aria-label="Photo précédente">‹</button>
+    <img id="vimg" alt="">
+    <button class="nav next" id="suiv" aria-label="Photo suivante">›</button>
+  </div>
+  <div class="hint">← → pour naviguer · Échap pour revenir aux vignettes</div>
+</div>
+
+<script>
+const PHOTOS = [{"id": "DSC_4017", "slug": "ven-cedh", "ts": "2022-09-09 08:54:14", "titre": "Vendredi 9 septembre 2022 · 8 h 54", "fichier": "X77 Strasbourg 2022 - 2022-09-09 08h54 - DSC_4017.jpg"}, {"id": "IMG_2670", "slug": "ven-chat", "ts": "2022-09-09 09:01:11", "titre": "Vendredi 9 septembre 2022 · 9 h 01", "fichier": "X77 Strasbourg 2022 - 2022-09-09 09h01 - IMG_2670.jpg"}, {"id": "IMG_2671_jpg", "slug": "ven-chat", "ts": "2022-09-09 09:06:00", "titre": "Vendredi 9 septembre 2022 · 9 h 06", "fichier": "X77 Strasbourg 2022 - 2022-09-09 09h06 - IMG_2671.jpg"}, {"id": "IMG_2672_jpg", "slug": "ven-chat", "ts": "2022-09-09 09:06:13", "titre": "Vendredi 9 septembre 2022 · 9 h 06", "fichier": "X77 Strasbourg 2022 - 2022-09-09 09h06 - IMG_2672.jpg"}, {"id": "IMG_2673_jpg", "slug": "ven-chat", "ts": "2022-09-09 09:06:21", "titre": "Vendredi 9 septembre 2022 · 9 h 06", "fichier": "X77 Strasbourg 2022 - 2022-09-09 09h06 - IMG_2673.jpg"}, {"id": "IMG_2674_jpg", "slug": "ven-chat", "ts": "2022-09-09 09:06:37", "titre": "Vendredi 9 septembre 2022 · 9 h 06", "fichier": "X77 Strasbourg 2022 - 2022-09-09 09h06 - IMG_2674.jpg"}, {"id": "DSC_4019-Panorama-2", "slug": "ven-cedh", "ts": "2022-09-09 09:11:16", "titre": "Vendredi 9 septembre 2022 · 9 h 11", "fichier": "X77 Strasbourg 2022 - 2022-09-09 09h11 - DSC_4019-Panorama-2.jpg"}, {"id": "DSC_4019-Panorama", "slug": "ven-cedh", "ts": "2022-09-09 09:11:16", "titre": "Vendredi 9 septembre 2022 · 9 h 11", "fichier": "X77 Strasbourg 2022 - 2022-09-09 09h11 - DSC_4019-Panorama.jpg"}, {"id": "DSC_4025", "slug": "ven-conseil", "ts": "2022-09-09 11:06:33", "titre": "Vendredi 9 septembre 2022 · 11 h 06", "fichier": "X77 Strasbourg 2022 - 2022-09-09 11h06 - DSC_4025.jpg"}, {"id": "DSC_4028", "slug": "ven-conseil", "ts": "2022-09-09 11:11:00", "titre": "Vendredi 9 septembre 2022 · 11 h 11", "fichier": "X77 Strasbourg 2022 - 2022-09-09 11h11 - DSC_4028.jpg"}, {"id": "DSC_4036", "slug": "ven-conseil", "ts": "2022-09-09 11:39:52", "titre": "Vendredi 9 septembre 2022 · 11 h 39", "fichier": "X77 Strasbourg 2022 - 2022-09-09 11h39 - DSC_4036.jpg"}, {"id": "DSC_4037", "slug": "ven-conseil", "ts": "2022-09-09 11:40:38", "titre": "Vendredi 9 septembre 2022 · 11 h 40", "fichier": "X77 Strasbourg 2022 - 2022-09-09 11h40 - DSC_4037.jpg"}, {"id": "DSC_4040", "slug": "ven-conseil", "ts": "2022-09-09 11:43:02", "titre": "Vendredi 9 septembre 2022 · 11 h 43", "fichier": "X77 Strasbourg 2022 - 2022-09-09 11h43 - DSC_4040.jpg"}, {"id": "DSC_4044", "slug": "ven-conseil", "ts": "2022-09-09 11:45:25", "titre": "Vendredi 9 septembre 2022 · 11 h 45", "fichier": "X77 Strasbourg 2022 - 2022-09-09 11h45 - DSC_4044.jpg"}, {"id": "DSC_4047", "slug": "ven-conseil", "ts": "2022-09-09 11:48:41", "titre": "Vendredi 9 septembre 2022 · 11 h 48", "fichier": "X77 Strasbourg 2022 - 2022-09-09 11h48 - DSC_4047.jpg"}, {"id": "DSC_4048", "slug": "ven-conseil", "ts": "2022-09-09 11:50:15", "titre": "Vendredi 9 septembre 2022 · 11 h 50", "fichier": "X77 Strasbourg 2022 - 2022-09-09 11h50 - DSC_4048.jpg"}, {"id": "DSC_4050", "slug": "ven-conseil", "ts": "2022-09-09 12:14:47", "titre": "Vendredi 9 septembre 2022 · 12 h 14", "fichier": "X77 Strasbourg 2022 - 2022-09-09 12h14 - DSC_4050.jpg"}, {"id": "DSC_4051", "slug": "ven-conseil", "ts": "2022-09-09 12:29:00", "titre": "Vendredi 9 septembre 2022 · 12 h 29", "fichier": "X77 Strasbourg 2022 - 2022-09-09 12h29 - DSC_4051.jpg"}, {"id": "DSC_4054", "slug": "ven-conseil", "ts": "2022-09-09 12:29:25", "titre": "Vendredi 9 septembre 2022 · 12 h 29", "fichier": "X77 Strasbourg 2022 - 2022-09-09 12h29 - DSC_4054.jpg"}, {"id": "DSC_4055", "slug": "ven-conseil", "ts": "2022-09-09 12:30:38", "titre": "Vendredi 9 septembre 2022 · 12 h 30", "fichier": "X77 Strasbourg 2022 - 2022-09-09 12h30 - DSC_4055.jpg"}, {"id": "DSC_4059", "slug": "ven-conseil", "ts": "2022-09-09 12:32:17", "titre": "Vendredi 9 septembre 2022 · 12 h 32", "fichier": "X77 Strasbourg 2022 - 2022-09-09 12h32 - DSC_4059.jpg"}, {"id": "IMG_2677_jpg", "slug": "ven-conseil", "ts": "2022-09-09 12:39:32", "titre": "Vendredi 9 septembre 2022 · 12 h 39", "fichier": "X77 Strasbourg 2022 - 2022-09-09 12h39 - IMG_2677.jpg"}, {"id": "DSC_4070", "slug": "ven-parlement", "ts": "2022-09-09 14:28:46", "titre": "Vendredi 9 septembre 2022 · 14 h 28", "fichier": "X77 Strasbourg 2022 - 2022-09-09 14h28 - DSC_4070.jpg"}, {"id": "DSC_4075", "slug": "ven-parlement", "ts": "2022-09-09 14:33:27", "titre": "Vendredi 9 septembre 2022 · 14 h 33", "fichier": "X77 Strasbourg 2022 - 2022-09-09 14h33 - DSC_4075.jpg"}, {"id": "DSC_4076", "slug": "ven-parlement", "ts": "2022-09-09 14:37:00", "titre": "Vendredi 9 septembre 2022 · 14 h 37", "fichier": "X77 Strasbourg 2022 - 2022-09-09 14h37 - DSC_4076.jpg"}, {"id": "DSC_4077-Panorama", "slug": "ven-parlement", "ts": "2022-09-09 14:37:04", "titre": "Vendredi 9 septembre 2022 · 14 h 37", "fichier": "X77 Strasbourg 2022 - 2022-09-09 14h37 - DSC_4077-Panorama.jpg"}, {"id": "IMG_2681", "slug": "ven-parlement", "ts": "2022-09-09 14:40:58", "titre": "Vendredi 9 septembre 2022 · 14 h 40", "fichier": "X77 Strasbourg 2022 - 2022-09-09 14h40 - IMG_2681.jpg"}, {"id": "IMG_2683", "slug": "ven-parlement", "ts": "2022-09-09 14:42:34", "titre": "Vendredi 9 septembre 2022 · 14 h 42", "fichier": "X77 Strasbourg 2022 - 2022-09-09 14h42 - IMG_2683.jpg"}, {"id": "DSC_4083", "slug": "ven-parlement", "ts": "2022-09-09 14:43:00", "titre": "Vendredi 9 septembre 2022 · 14 h 43", "fichier": "X77 Strasbourg 2022 - 2022-09-09 14h43 - DSC_4083.jpg"}, {"id": "DSC_4084", "slug": "ven-parlement", "ts": "2022-09-09 14:43:26", "titre": "Vendredi 9 septembre 2022 · 14 h 43", "fichier": "X77 Strasbourg 2022 - 2022-09-09 14h43 - DSC_4084.jpg"}, {"id": "DSC_4085", "slug": "ven-parlement", "ts": "2022-09-09 15:45:25", "titre": "Vendredi 9 septembre 2022 · 15 h 45", "fichier": "X77 Strasbourg 2022 - 2022-09-09 15h45 - DSC_4085.jpg"}, {"id": "DSC_4087", "slug": "ven-parlement", "ts": "2022-09-09 15:47:10", "titre": "Vendredi 9 septembre 2022 · 15 h 47", "fichier": "X77 Strasbourg 2022 - 2022-09-09 15h47 - DSC_4087.jpg"}, {"id": "DSC_4090", "slug": "ven-parlement", "ts": "2022-09-09 15:49:29", "titre": "Vendredi 9 septembre 2022 · 15 h 49", "fichier": "X77 Strasbourg 2022 - 2022-09-09 15h49 - DSC_4090.jpg"}, {"id": "DSC_4093", "slug": "ven-parlement", "ts": "2022-09-09 15:52:16", "titre": "Vendredi 9 septembre 2022 · 15 h 52", "fichier": "X77 Strasbourg 2022 - 2022-09-09 15h52 - DSC_4093.jpg"}, {"id": "DSC_4096", "slug": "ven-parlement", "ts": "2022-09-09 16:04:01", "titre": "Vendredi 9 septembre 2022 · 16 h 04", "fichier": "X77 Strasbourg 2022 - 2022-09-09 16h04 - DSC_4096.jpg"}, {"id": "DSC_4097", "slug": "ven-parlement", "ts": "2022-09-09 16:04:04", "titre": "Vendredi 9 septembre 2022 · 16 h 04", "fichier": "X77 Strasbourg 2022 - 2022-09-09 16h04 - DSC_4097.jpg"}, {"id": "DSC_4098", "slug": "ven-parlement", "ts": "2022-09-09 16:04:43", "titre": "Vendredi 9 septembre 2022 · 16 h 04", "fichier": "X77 Strasbourg 2022 - 2022-09-09 16h04 - DSC_4098.jpg"}, {"id": "DSC_4100", "slug": "ven-parlement", "ts": "2022-09-09 16:06:14", "titre": "Vendredi 9 septembre 2022 · 16 h 06", "fichier": "X77 Strasbourg 2022 - 2022-09-09 16h06 - DSC_4100.jpg"}, {"id": "IMG_2685", "slug": "ven-parlement", "ts": "2022-09-09 16:08:28", "titre": "Vendredi 9 septembre 2022 · 16 h 08", "fichier": "X77 Strasbourg 2022 - 2022-09-09 16h08 - IMG_2685.jpg"}, {"id": "DSC_4101", "slug": "ven-parlement", "ts": "2022-09-09 16:08:38", "titre": "Vendredi 9 septembre 2022 · 16 h 08", "fichier": "X77 Strasbourg 2022 - 2022-09-09 16h08 - DSC_4101.jpg"}, {"id": "DSC_4112", "slug": "ven-cathedrale", "ts": "2022-09-09 17:18:29", "titre": "Vendredi 9 septembre 2022 · 17 h 18", "fichier": "X77 Strasbourg 2022 - 2022-09-09 17h18 - DSC_4112.jpg"}, {"id": "DSC_4113", "slug": "ven-cathedrale", "ts": "2022-09-09 17:19:56", "titre": "Vendredi 9 septembre 2022 · 17 h 19", "fichier": "X77 Strasbourg 2022 - 2022-09-09 17h19 - DSC_4113.jpg"}, {"id": "DSC_4117", "slug": "ven-cathedrale", "ts": "2022-09-09 17:23:01", "titre": "Vendredi 9 septembre 2022 · 17 h 23", "fichier": "X77 Strasbourg 2022 - 2022-09-09 17h23 - DSC_4117.jpg"}, {"id": "DSC_4118", "slug": "ven-cathedrale", "ts": "2022-09-09 17:23:57", "titre": "Vendredi 9 septembre 2022 · 17 h 23", "fichier": "X77 Strasbourg 2022 - 2022-09-09 17h23 - DSC_4118.jpg"}, {"id": "DSC_4120", "slug": "ven-cathedrale", "ts": "2022-09-09 17:25:58", "titre": "Vendredi 9 septembre 2022 · 17 h 25", "fichier": "X77 Strasbourg 2022 - 2022-09-09 17h25 - DSC_4120.jpg"}, {"id": "DSC_4122", "slug": "ven-cathedrale", "ts": "2022-09-09 17:27:35", "titre": "Vendredi 9 septembre 2022 · 17 h 27", "fichier": "X77 Strasbourg 2022 - 2022-09-09 17h27 - DSC_4122.jpg"}, {"id": "DSC_4124", "slug": "ven-cathedrale", "ts": "2022-09-09 17:37:58", "titre": "Vendredi 9 septembre 2022 · 17 h 37", "fichier": "X77 Strasbourg 2022 - 2022-09-09 17h37 - DSC_4124.jpg"}, {"id": "DSC_4125", "slug": "ven-cathedrale", "ts": "2022-09-09 17:38:58", "titre": "Vendredi 9 septembre 2022 · 17 h 38", "fichier": "X77 Strasbourg 2022 - 2022-09-09 17h38 - DSC_4125.jpg"}, {"id": "DSC_4128", "slug": "ven-cathedrale", "ts": "2022-09-09 17:44:21", "titre": "Vendredi 9 septembre 2022 · 17 h 44", "fichier": "X77 Strasbourg 2022 - 2022-09-09 17h44 - DSC_4128.jpg"}, {"id": "DSC_4132", "slug": "ven-cathedrale", "ts": "2022-09-09 18:23:43", "titre": "Vendredi 9 septembre 2022 · 18 h 23", "fichier": "X77 Strasbourg 2022 - 2022-09-09 18h23 - DSC_4132.jpg"}, {"id": "DSC_4133", "slug": "ven-cathedrale", "ts": "2022-09-09 18:25:06", "titre": "Vendredi 9 septembre 2022 · 18 h 25", "fichier": "X77 Strasbourg 2022 - 2022-09-09 18h25 - DSC_4133.jpg"}, {"id": "DSC_4134", "slug": "ven-cathedrale", "ts": "2022-09-09 18:25:47", "titre": "Vendredi 9 septembre 2022 · 18 h 25", "fichier": "X77 Strasbourg 2022 - 2022-09-09 18h25 - DSC_4134.jpg"}, {"id": "DSC_4136", "slug": "ven-cathedrale", "ts": "2022-09-09 18:27:00", "titre": "Vendredi 9 septembre 2022 · 18 h 27", "fichier": "X77 Strasbourg 2022 - 2022-09-09 18h27 - DSC_4136.jpg"}, {"id": "DSC_4140", "slug": "ven-cathedrale", "ts": "2022-09-09 18:30:53", "titre": "Vendredi 9 septembre 2022 · 18 h 30", "fichier": "X77 Strasbourg 2022 - 2022-09-09 18h30 - DSC_4140.jpg"}, {"id": "DSC_4141", "slug": "ven-cathedrale", "ts": "2022-09-09 18:32:17", "titre": "Vendredi 9 septembre 2022 · 18 h 32", "fichier": "X77 Strasbourg 2022 - 2022-09-09 18h32 - DSC_4141.jpg"}, {"id": "DSC_4144", "slug": "ven-cathedrale", "ts": "2022-09-09 18:36:53", "titre": "Vendredi 9 septembre 2022 · 18 h 36", "fichier": "X77 Strasbourg 2022 - 2022-09-09 18h36 - DSC_4144.jpg"}, {"id": "DSC_4145", "slug": "ven-batorama", "ts": "2022-09-09 18:37:22", "titre": "Vendredi 9 septembre 2022 · 18 h 37", "fichier": "X77 Strasbourg 2022 - 2022-09-09 18h37 - DSC_4145.jpg"}, {"id": "DSC_4148", "slug": "ven-batorama", "ts": "2022-09-09 18:39:15", "titre": "Vendredi 9 septembre 2022 · 18 h 39", "fichier": "X77 Strasbourg 2022 - 2022-09-09 18h39 - DSC_4148.jpg"}, {"id": "DSC_4152", "slug": "ven-batorama", "ts": "2022-09-09 18:41:33", "titre": "Vendredi 9 septembre 2022 · 18 h 41", "fichier": "X77 Strasbourg 2022 - 2022-09-09 18h41 - DSC_4152.jpg"}, {"id": "DSC_4153", "slug": "ven-batorama", "ts": "2022-09-09 18:41:57", "titre": "Vendredi 9 septembre 2022 · 18 h 41", "fichier": "X77 Strasbourg 2022 - 2022-09-09 18h41 - DSC_4153.jpg"}, {"id": "DSC_4155", "slug": "ven-batorama", "ts": "2022-09-09 18:51:12", "titre": "Vendredi 9 septembre 2022 · 18 h 51", "fichier": "X77 Strasbourg 2022 - 2022-09-09 18h51 - DSC_4155.jpg"}, {"id": "DSC_4167", "slug": "ven-batorama", "ts": "2022-09-09 19:05:56", "titre": "Vendredi 9 septembre 2022 · 19 h 05", "fichier": "X77 Strasbourg 2022 - 2022-09-09 19h05 - DSC_4167.jpg"}, {"id": "DSC_4171", "slug": "ven-batorama", "ts": "2022-09-09 19:07:16", "titre": "Vendredi 9 septembre 2022 · 19 h 07", "fichier": "X77 Strasbourg 2022 - 2022-09-09 19h07 - DSC_4171.jpg"}, {"id": "DSC_4175", "slug": "ven-batorama", "ts": "2022-09-09 19:08:17", "titre": "Vendredi 9 septembre 2022 · 19 h 08", "fichier": "X77 Strasbourg 2022 - 2022-09-09 19h08 - DSC_4175.jpg"}, {"id": "DSC_4180", "slug": "ven-batorama", "ts": "2022-09-09 19:23:48", "titre": "Vendredi 9 septembre 2022 · 19 h 23", "fichier": "X77 Strasbourg 2022 - 2022-09-09 19h23 - DSC_4180.jpg"}, {"id": "DSC_4185", "slug": "ven-batorama", "ts": "2022-09-09 19:35:43", "titre": "Vendredi 9 septembre 2022 · 19 h 35", "fichier": "X77 Strasbourg 2022 - 2022-09-09 19h35 - DSC_4185.jpg"}, {"id": "DSC_4187", "slug": "ven-batorama", "ts": "2022-09-09 19:41:34", "titre": "Vendredi 9 septembre 2022 · 19 h 41", "fichier": "X77 Strasbourg 2022 - 2022-09-09 19h41 - DSC_4187.jpg"}, {"id": "DSC_4198", "slug": "sam-kaysersberg", "ts": "2022-09-10 10:15:54", "titre": "Samedi 10 septembre 2022 · 10 h 15", "fichier": "X77 Strasbourg 2022 - 2022-09-10 10h15 - DSC_4198.jpg"}, {"id": "DSC_4201-Panorama", "slug": "sam-kaysersberg", "ts": "2022-09-10 10:27:51", "titre": "Samedi 10 septembre 2022 · 10 h 27", "fichier": "X77 Strasbourg 2022 - 2022-09-10 10h27 - DSC_4201-Panorama.jpg"}, {"id": "DSC_4208", "slug": "sam-kaysersberg", "ts": "2022-09-10 10:32:46", "titre": "Samedi 10 septembre 2022 · 10 h 32", "fichier": "X77 Strasbourg 2022 - 2022-09-10 10h32 - DSC_4208.jpg"}, {"id": "DSC_4209", "slug": "sam-kaysersberg", "ts": "2022-09-10 10:34:25", "titre": "Samedi 10 septembre 2022 · 10 h 34", "fichier": "X77 Strasbourg 2022 - 2022-09-10 10h34 - DSC_4209.jpg"}, {"id": "DSC_4211", "slug": "sam-kaysersberg", "ts": "2022-09-10 10:34:51", "titre": "Samedi 10 septembre 2022 · 10 h 34", "fichier": "X77 Strasbourg 2022 - 2022-09-10 10h34 - DSC_4211.jpg"}, {"id": "DSC_4213", "slug": "sam-kaysersberg", "ts": "2022-09-10 10:39:58", "titre": "Samedi 10 septembre 2022 · 10 h 39", "fichier": "X77 Strasbourg 2022 - 2022-09-10 10h39 - DSC_4213.jpg"}, {"id": "DSC_4226", "slug": "sam-kaysersberg", "ts": "2022-09-10 11:14:15", "titre": "Samedi 10 septembre 2022 · 11 h 14", "fichier": "X77 Strasbourg 2022 - 2022-09-10 11h14 - DSC_4226.jpg"}, {"id": "DSC_4227", "slug": "sam-kaysersberg", "ts": "2022-09-10 11:14:30", "titre": "Samedi 10 septembre 2022 · 11 h 14", "fichier": "X77 Strasbourg 2022 - 2022-09-10 11h14 - DSC_4227.jpg"}, {"id": "DSC_4229", "slug": "sam-kaysersberg", "ts": "2022-09-10 11:15:43", "titre": "Samedi 10 septembre 2022 · 11 h 15", "fichier": "X77 Strasbourg 2022 - 2022-09-10 11h15 - DSC_4229.jpg"}, {"id": "DSC_4237", "slug": "sam-kaysersberg", "ts": "2022-09-10 11:19:18", "titre": "Samedi 10 septembre 2022 · 11 h 19", "fichier": "X77 Strasbourg 2022 - 2022-09-10 11h19 - DSC_4237.jpg"}, {"id": "DSC_4241", "slug": "sam-kaysersberg", "ts": "2022-09-10 11:24:47", "titre": "Samedi 10 septembre 2022 · 11 h 24", "fichier": "X77 Strasbourg 2022 - 2022-09-10 11h24 - DSC_4241.jpg"}, {"id": "DSC_4244", "slug": "sam-kaysersberg", "ts": "2022-09-10 11:30:59", "titre": "Samedi 10 septembre 2022 · 11 h 30", "fichier": "X77 Strasbourg 2022 - 2022-09-10 11h30 - DSC_4244.jpg"}, {"id": "DSC_4247", "slug": "sam-rolly", "ts": "2022-09-10 12:24:57", "titre": "Samedi 10 septembre 2022 · 12 h 24", "fichier": "X77 Strasbourg 2022 - 2022-09-10 12h24 - DSC_4247.jpg"}, {"id": "DSC_4255", "slug": "sam-hk", "ts": "2022-09-10 14:52:23", "titre": "Samedi 10 septembre 2022 · 14 h 52", "fichier": "X77 Strasbourg 2022 - 2022-09-10 14h52 - DSC_4255.jpg"}, {"id": "DSC_4260", "slug": "sam-hk", "ts": "2022-09-10 15:02:49", "titre": "Samedi 10 septembre 2022 · 15 h 02", "fichier": "X77 Strasbourg 2022 - 2022-09-10 15h02 - DSC_4260.jpg"}, {"id": "DSC_4269", "slug": "sam-hk", "ts": "2022-09-10 15:24:51", "titre": "Samedi 10 septembre 2022 · 15 h 24", "fichier": "X77 Strasbourg 2022 - 2022-09-10 15h24 - DSC_4269.jpg"}, {"id": "DSC_4272", "slug": "sam-hk", "ts": "2022-09-10 15:27:47", "titre": "Samedi 10 septembre 2022 · 15 h 27", "fichier": "X77 Strasbourg 2022 - 2022-09-10 15h27 - DSC_4272.jpg"}, {"id": "DSC_4278", "slug": "sam-hk", "ts": "2022-09-10 15:32:56", "titre": "Samedi 10 septembre 2022 · 15 h 32", "fichier": "X77 Strasbourg 2022 - 2022-09-10 15h32 - DSC_4278.jpg"}, {"id": "DSC_4283-Panorama", "slug": "sam-hk", "ts": "2022-09-10 15:34:51", "titre": "Samedi 10 septembre 2022 · 15 h 34", "fichier": "X77 Strasbourg 2022 - 2022-09-10 15h34 - DSC_4283-Panorama.jpg"}, {"id": "DSC_4288-Panorama", "slug": "sam-hk", "ts": "2022-09-10 15:35:51", "titre": "Samedi 10 septembre 2022 · 15 h 35", "fichier": "X77 Strasbourg 2022 - 2022-09-10 15h35 - DSC_4288-Panorama.jpg"}, {"id": "DSC_4292", "slug": "sam-hk", "ts": "2022-09-10 15:37:53", "titre": "Samedi 10 septembre 2022 · 15 h 37", "fichier": "X77 Strasbourg 2022 - 2022-09-10 15h37 - DSC_4292.jpg"}, {"id": "DSC_4296", "slug": "sam-hk", "ts": "2022-09-10 15:47:37", "titre": "Samedi 10 septembre 2022 · 15 h 47", "fichier": "X77 Strasbourg 2022 - 2022-09-10 15h47 - DSC_4296.jpg"}, {"id": "DSC_4298", "slug": "sam-hk", "ts": "2022-09-10 15:50:58", "titre": "Samedi 10 septembre 2022 · 15 h 50", "fichier": "X77 Strasbourg 2022 - 2022-09-10 15h50 - DSC_4298.jpg"}, {"id": "IMG_2706_jpg", "slug": "sam-gala", "ts": "2022-09-11 00:28:08", "titre": "Dimanche 11 septembre 2022 · 0 h 28", "fichier": "X77 Strasbourg 2022 - 2022-09-11 00h28 - IMG_2706.jpg"}, {"id": "DSC_4309", "slug": "dim-visites", "ts": "2022-09-11 10:53:58", "titre": "Dimanche 11 septembre 2022 · 10 h 53", "fichier": "X77 Strasbourg 2022 - 2022-09-11 10h53 - DSC_4309.jpg"}, {"id": "DSC_4314", "slug": "dim-visites", "ts": "2022-09-11 11:01:21", "titre": "Dimanche 11 septembre 2022 · 11 h 01", "fichier": "X77 Strasbourg 2022 - 2022-09-11 11h01 - DSC_4314.jpg"}, {"id": "DSC_4315", "slug": "dim-visites", "ts": "2022-09-11 11:02:05", "titre": "Dimanche 11 septembre 2022 · 11 h 02", "fichier": "X77 Strasbourg 2022 - 2022-09-11 11h02 - DSC_4315.jpg"}, {"id": "DSC_4319", "slug": "dim-visites", "ts": "2022-09-11 11:05:52", "titre": "Dimanche 11 septembre 2022 · 11 h 05", "fichier": "X77 Strasbourg 2022 - 2022-09-11 11h05 - DSC_4319.jpg"}, {"id": "DSC_4321", "slug": "dim-visites", "ts": "2022-09-11 11:07:03", "titre": "Dimanche 11 septembre 2022 · 11 h 07", "fichier": "X77 Strasbourg 2022 - 2022-09-11 11h07 - DSC_4321.jpg"}, {"id": "DSC_4322", "slug": "dim-visites", "ts": "2022-09-11 11:09:13", "titre": "Dimanche 11 septembre 2022 · 11 h 09", "fichier": "X77 Strasbourg 2022 - 2022-09-11 11h09 - DSC_4322.jpg"}, {"id": "DSC_4323", "slug": "dim-visites", "ts": "2022-09-11 11:09:45", "titre": "Dimanche 11 septembre 2022 · 11 h 09", "fichier": "X77 Strasbourg 2022 - 2022-09-11 11h09 - DSC_4323.jpg"}, {"id": "DSC_4324", "slug": "dim-visites", "ts": "2022-09-11 11:11:10", "titre": "Dimanche 11 septembre 2022 · 11 h 11", "fichier": "X77 Strasbourg 2022 - 2022-09-11 11h11 - DSC_4324.jpg"}, {"id": "DSC_4326", "slug": "dim-visites", "ts": "2022-09-11 11:12:59", "titre": "Dimanche 11 septembre 2022 · 11 h 12", "fichier": "X77 Strasbourg 2022 - 2022-09-11 11h12 - DSC_4326.jpg"}, {"id": "DSC_4332", "slug": "dim-visites", "ts": "2022-09-11 11:36:21", "titre": "Dimanche 11 septembre 2022 · 11 h 36", "fichier": "X77 Strasbourg 2022 - 2022-09-11 11h36 - DSC_4332.jpg"}, {"id": "DSC_4335", "slug": "dim-visites", "ts": "2022-09-11 11:40:03", "titre": "Dimanche 11 septembre 2022 · 11 h 40", "fichier": "X77 Strasbourg 2022 - 2022-09-11 11h40 - DSC_4335.jpg"}, {"id": "DSC_4337", "slug": "dim-visites", "ts": "2022-09-11 11:45:57", "titre": "Dimanche 11 septembre 2022 · 11 h 45", "fichier": "X77 Strasbourg 2022 - 2022-09-11 11h45 - DSC_4337.jpg"}, {"id": "DSC_4338", "slug": "dim-visites", "ts": "2022-09-11 11:46:28", "titre": "Dimanche 11 septembre 2022 · 11 h 46", "fichier": "X77 Strasbourg 2022 - 2022-09-11 11h46 - DSC_4338.jpg"}, {"id": "DSC_4339", "slug": "dim-visites", "ts": "2022-09-11 11:47:11", "titre": "Dimanche 11 septembre 2022 · 11 h 47", "fichier": "X77 Strasbourg 2022 - 2022-09-11 11h47 - DSC_4339.jpg"}, {"id": "DSC_4353", "slug": "dim-visites", "ts": "2022-09-11 11:58:12", "titre": "Dimanche 11 septembre 2022 · 11 h 58", "fichier": "X77 Strasbourg 2022 - 2022-09-11 11h58 - DSC_4353.jpg"}, {"id": "DSC_4357", "slug": "dim-visites", "ts": "2022-09-11 12:01:02", "titre": "Dimanche 11 septembre 2022 · 12 h 01", "fichier": "X77 Strasbourg 2022 - 2022-09-11 12h01 - DSC_4357.jpg"}, {"id": "DSC_4358", "slug": "dim-visites", "ts": "2022-09-11 12:03:11", "titre": "Dimanche 11 septembre 2022 · 12 h 03", "fichier": "X77 Strasbourg 2022 - 2022-09-11 12h03 - DSC_4358.jpg"}, {"id": "DSC_4364", "slug": "dim-cocktail", "ts": "2022-09-11 12:38:12", "titre": "Dimanche 11 septembre 2022 · 12 h 38", "fichier": "X77 Strasbourg 2022 - 2022-09-11 12h38 - DSC_4364.jpg"}, {"id": "DSC_4367", "slug": "dim-cocktail", "ts": "2022-09-11 12:40:13", "titre": "Dimanche 11 septembre 2022 · 12 h 40", "fichier": "X77 Strasbourg 2022 - 2022-09-11 12h40 - DSC_4367.jpg"}, {"id": "DSC_4370", "slug": "dim-cocktail", "ts": "2022-09-11 12:41:40", "titre": "Dimanche 11 septembre 2022 · 12 h 41", "fichier": "X77 Strasbourg 2022 - 2022-09-11 12h41 - DSC_4370.jpg"}, {"id": "DSC_4372", "slug": "dim-cocktail", "ts": "2022-09-11 12:44:56", "titre": "Dimanche 11 septembre 2022 · 12 h 44", "fichier": "X77 Strasbourg 2022 - 2022-09-11 12h44 - DSC_4372.jpg"}, {"id": "DSC_4373", "slug": "dim-cocktail", "ts": "2022-09-11 14:28:31", "titre": "Dimanche 11 septembre 2022 · 14 h 28", "fichier": "X77 Strasbourg 2022 - 2022-09-11 14h28 - DSC_4373.jpg"}, {"id": "DSC_4374", "slug": "dim-cocktail", "ts": "2022-09-11 15:00:45", "titre": "Dimanche 11 septembre 2022 · 15 h 00", "fichier": "X77 Strasbourg 2022 - 2022-09-11 15h00 - DSC_4374.jpg"}, {"id": "DSC_4376", "slug": "dim-cocktail", "ts": "2022-09-11 15:40:45", "titre": "Dimanche 11 septembre 2022 · 15 h 40", "fichier": "X77 Strasbourg 2022 - 2022-09-11 15h40 - DSC_4376.jpg"}, {"id": "DSC_4379", "slug": "dim-cocktail", "ts": "2022-09-11 15:49:48", "titre": "Dimanche 11 septembre 2022 · 15 h 49", "fichier": "X77 Strasbourg 2022 - 2022-09-11 15h49 - DSC_4379.jpg"}, {"id": "DSC_4380", "slug": "dim-cocktail", "ts": "2022-09-11 15:50:49", "titre": "Dimanche 11 septembre 2022 · 15 h 50", "fichier": "X77 Strasbourg 2022 - 2022-09-11 15h50 - DSC_4380.jpg"}, {"id": "DSC_4383", "slug": "dim-cathedrale", "ts": "2022-09-11 15:55:32", "titre": "Dimanche 11 septembre 2022 · 15 h 55", "fichier": "X77 Strasbourg 2022 - 2022-09-11 15h55 - DSC_4383.jpg"}, {"id": "DSC_4384-Panorama", "slug": "dim-cathedrale", "ts": "2022-09-11 16:04:37", "titre": "Dimanche 11 septembre 2022 · 16 h 04", "fichier": "X77 Strasbourg 2022 - 2022-09-11 16h04 - DSC_4384-Panorama.jpg"}, {"id": "DSC_4386", "slug": "dim-cathedrale", "ts": "2022-09-11 16:06:46", "titre": "Dimanche 11 septembre 2022 · 16 h 06", "fichier": "X77 Strasbourg 2022 - 2022-09-11 16h06 - DSC_4386.jpg"}, {"id": "DSC_4387", "slug": "dim-cathedrale", "ts": "2022-09-11 16:08:51", "titre": "Dimanche 11 septembre 2022 · 16 h 08", "fichier": "X77 Strasbourg 2022 - 2022-09-11 16h08 - DSC_4387.jpg"}, {"id": "s01", "slug": "souvenir", "ts": "", "titre": "Jeudi · Retrouvailles à l'Art Café", "fichier": "X77 Strasbourg 2022 - Petit souvenir - s01.jpg"}, {"id": "s02", "slug": "souvenir", "ts": "", "titre": "Jeudi · Retrouvailles à l'Art Café", "fichier": "X77 Strasbourg 2022 - Petit souvenir - s02.jpg"}, {"id": "s03", "slug": "souvenir", "ts": "", "titre": "Jeudi · Retrouvailles à l'Art Café", "fichier": "X77 Strasbourg 2022 - Petit souvenir - s03.jpg"}, {"id": "s04", "slug": "souvenir", "ts": "", "titre": "Jeudi · Retrouvailles à l'Art Café", "fichier": "X77 Strasbourg 2022 - Petit souvenir - s04.jpg"}, {"id": "s05", "slug": "souvenir", "ts": "", "titre": "Jeudi · Retrouvailles à l'Art Café", "fichier": "X77 Strasbourg 2022 - Petit souvenir - s05.jpg"}, {"id": "s06", "slug": "souvenir", "ts": "", "titre": "Vendredi · Cour européenne des droits de l'homme", "fichier": "X77 Strasbourg 2022 - Petit souvenir - s06.jpg"}, {"id": "s07", "slug": "souvenir", "ts": "", "titre": "Vendredi · Cour européenne des droits de l'homme", "fichier": "X77 Strasbourg 2022 - Petit souvenir - s07.jpg"}, {"id": "s08", "slug": "souvenir", "ts": "", "titre": "Vendredi · Conseil de l'Europe", "fichier": "X77 Strasbourg 2022 - Petit souvenir - s08.jpg"}, {"id": "s09", "slug": "souvenir", "ts": "", "titre": "Vendredi · Conseil de l'Europe", "fichier": "X77 Strasbourg 2022 - Petit souvenir - s09.jpg"}, {"id": "s10", "slug": "souvenir", "ts": "", "titre": "Vendredi · Conseil de l'Europe", "fichier": "X77 Strasbourg 2022 - Petit souvenir - s10.jpg"}, {"id": "s11", "slug": "souvenir", "ts": "", "titre": "Vendredi · Parlement européen", "fichier": "X77 Strasbourg 2022 - Petit souvenir - s11.jpg"}, {"id": "s12", "slug": "souvenir", "ts": "", "titre": "Vendredi · Parlement européen", "fichier": "X77 Strasbourg 2022 - Petit souvenir - s12.jpg"}, {"id": "s13", "slug": "souvenir", "ts": "", "titre": "Vendredi · Les droits de l'Homme selon le Chat", "fichier": "X77 Strasbourg 2022 - Petit souvenir - s13.jpg"}, {"id": "s14", "slug": "souvenir", "ts": "", "titre": "Vendredi · Visite de la cathédrale", "fichier": "X77 Strasbourg 2022 - Petit souvenir - s14.jpg"}, {"id": "s15", "slug": "souvenir", "ts": "", "titre": "Vendredi · Le Batorama", "fichier": "X77 Strasbourg 2022 - Petit souvenir - s15.jpg"}, {"id": "s16", "slug": "souvenir", "ts": "", "titre": "Vendredi · Choucroute chez Kammerzell", "fichier": "X77 Strasbourg 2022 - Petit souvenir - s16.jpg"}, {"id": "s17", "slug": "souvenir", "ts": "", "titre": "Samedi · Le Haut-Kœnigsbourg", "fichier": "X77 Strasbourg 2022 - Petit souvenir - s17.jpg"}, {"id": "s18", "slug": "souvenir", "ts": "", "titre": "Samedi · Dégustation chez Rolly-Gassmann", "fichier": "X77 Strasbourg 2022 - Petit souvenir - s18.jpg"}, {"id": "s19", "slug": "souvenir", "ts": "", "titre": "Samedi · Kaysersberg", "fichier": "X77 Strasbourg 2022 - Petit souvenir - s19.jpg"}, {"id": "s20", "slug": "souvenir", "ts": "", "titre": "Samedi · Soirée de gala à l'Ancienne Douane", "fichier": "X77 Strasbourg 2022 - Petit souvenir - s20.jpg"}, {"id": "s21", "slug": "souvenir", "ts": "", "titre": "Samedi · Soirée de gala à l'Ancienne Douane", "fichier": "X77 Strasbourg 2022 - Petit souvenir - s21.jpg"}, {"id": "s22", "slug": "souvenir", "ts": "", "titre": "Samedi · Soirée de gala à l'Ancienne Douane", "fichier": "X77 Strasbourg 2022 - Petit souvenir - s22.jpg"}, {"id": "s23", "slug": "souvenir", "ts": "", "titre": "Samedi · Soirée de gala à l'Ancienne Douane", "fichier": "X77 Strasbourg 2022 - Petit souvenir - s23.jpg"}, {"id": "s24", "slug": "souvenir", "ts": "", "titre": "Dimanche · Messe à la cathédrale", "fichier": "X77 Strasbourg 2022 - Petit souvenir - s24.jpg"}, {"id": "s25", "slug": "souvenir", "ts": "", "titre": "Dimanche · Visites du vieux Strasbourg", "fichier": "X77 Strasbourg 2022 - Petit souvenir - s25.jpg"}, {"id": "s26", "slug": "souvenir", "ts": "", "titre": "Dimanche · Cocktail de clôture", "fichier": "X77 Strasbourg 2022 - Petit souvenir - s26.jpg"}, {"id": "s27", "slug": "souvenir", "ts": "", "titre": "L'équipe d'organisation", "fichier": "X77 Strasbourg 2022 - Petit souvenir - s27.jpg"}, {"id": "s28", "slug": "souvenir", "ts": "", "titre": "L'équipe d'organisation", "fichier": "X77 Strasbourg 2022 - Petit souvenir - s28.jpg"}, {"id": "s29", "slug": "souvenir", "ts": "", "titre": "L'équipe d'organisation", "fichier": "X77 Strasbourg 2022 - Petit souvenir - s29.jpg"}, {"id": "s30", "slug": "souvenir", "ts": "", "titre": "L'équipe d'organisation", "fichier": "X77 Strasbourg 2022 - Petit souvenir - s30.jpg"}, {"id": "s31", "slug": "souvenir", "ts": "", "titre": "L'équipe d'organisation", "fichier": "X77 Strasbourg 2022 - Petit souvenir - s31.jpg"}];
+const ORDRE = [{"slug": "ven-cedh", "jour": "Vendredi 9 septembre", "label": "Cour européenne des droits de l'homme"}, {"slug": "ven-chat", "jour": "Vendredi 9 septembre", "label": "Les droits de l'Homme selon le Chat"}, {"slug": "ven-conseil", "jour": "Vendredi 9 septembre", "label": "Conseil de l'Europe"}, {"slug": "ven-parlement", "jour": "Vendredi 9 septembre", "label": "Parlement européen"}, {"slug": "ven-cathedrale", "jour": "Vendredi 9 septembre", "label": "Visite de la cathédrale"}, {"slug": "ven-batorama", "jour": "Vendredi 9 septembre", "label": "Batorama et vieille ville"}, {"slug": "sam-kaysersberg", "jour": "Samedi 10 septembre", "label": "Kaysersberg"}, {"slug": "sam-rolly", "jour": "Samedi 10 septembre", "label": "Vignoble et domaine Rolly-Gassmann"}, {"slug": "sam-hk", "jour": "Samedi 10 septembre", "label": "Le Haut-Kœnigsbourg"}, {"slug": "sam-gala", "jour": "Samedi 10 septembre", "label": "Soirée de gala à l'Ancienne Douane"}, {"slug": "dim-visites", "jour": "Dimanche 11 septembre", "label": "Visites du vieux Strasbourg"}, {"slug": "dim-cocktail", "jour": "Dimanche 11 septembre", "label": "Cocktail de clôture chez Luc"}, {"slug": "dim-cathedrale", "jour": "Dimanche 11 septembre", "label": "Dernier regard sur la cathédrale"}, {"slug": "souvenir", "jour": "Le petit souvenir", "label": "Photos de Patrick Tejedor"}];
+
+const $ = id => document.getElementById(id);
+let courante = 'toutes';   // rubrique affichée
+let liste = [];            // photos de la vue courante
+let idx = -1;              // photo ouverte
+
+function nomFichier(p) { return p.fichier; }
+
+function menu() {
+  const nav = $('rubriques');
+  nav.innerHTML = '';
+  const bouton = (slug, label, n) => {
+    const b = document.createElement('button');
+    b.className = 'rubrique' + (slug === courante ? ' active' : '');
+    b.innerHTML = '<span></span><span class="n">' + n + '</span>';
+    b.firstChild.textContent = label;
+    b.onclick = () => { courante = slug; fermer(); afficher(); menu(); history.replaceState(null, '', '#' + slug); };
+    nav.appendChild(b);
+  };
+  bouton('toutes', 'Toutes les photos', PHOTOS.length);
+  let jour = null;
+  ORDRE.forEach(r => {
+    if (r.jour !== jour) { jour = r.jour; const h = document.createElement('div'); h.className = 'jour'; h.textContent = jour; nav.appendChild(h); }
+    bouton(r.slug, r.label, PHOTOS.filter(p => p.slug === r.slug).length);
+  });
+}
+
+function vignette(p) {
+  const b = document.createElement('button');
+  b.className = 'thumb' + (p.slug === 'trombi' ? ' portrait' : '');
+  b.title = p.titre;
+  const img = document.createElement('img');
+  img.loading = 'lazy'; img.src = 'photos/thumb/' + p.id + '.jpg'; img.alt = p.titre;
+  const c = document.createElement('div'); c.className = 'cap'; c.textContent = p.titre;
+  b.append(img, c);
+  const k = liste.length; liste.push(p);
+  b.onclick = () => ouvrir(k);
+  return b;
+}
+
+function afficher() {
+  const g = $('grille');
+  g.innerHTML = ''; liste = [];
+  const groupes = courante === 'toutes' ? ORDRE : ORDRE.filter(r => r.slug === courante);
+  const label = courante === 'toutes' ? 'Toutes les photos' : (groupes[0].slug === 'trombi' ? groupes[0].label : groupes[0].jour + ' · ' + groupes[0].label);
+  const n = courante === 'toutes' ? PHOTOS.length : PHOTOS.filter(p => p.slug === courante).length;
+  $('titre').innerHTML = ''; $('titre').append(label);
+  const sm = document.createElement('small'); sm.textContent = n + ' photo' + (n > 1 ? 's' : ''); $('titre').append(sm);
+  groupes.forEach(r => {
+    const ps = PHOTOS.filter(p => p.slug === r.slug);
+    if (!ps.length) return;
+    if (courante === 'toutes') { const h = document.createElement('div'); h.className = 'section-title'; h.textContent = r.slug === 'trombi' ? r.label : r.jour + ' · ' + r.label; g.appendChild(h); }
+    const grid = document.createElement('div'); grid.className = 'grid';
+    ps.forEach(p => grid.appendChild(vignette(p)));
+    g.appendChild(grid);
+  });
+  g.scrollTop = 0;
+}
+
+function ouvrir(k) {
+  idx = (k + liste.length) % liste.length;
+  const p = liste[idx];
+  $('vimg').src = 'photos/full/' + p.id + '.jpg';
+  $('vimg').alt = p.titre;
+  $('vtitle').innerHTML = '';
+  $('vtitle').classList.toggle('trombi', p.slug === 'trombi');
+  $('vtitle').append(p.titre);
+  const s = document.createElement('span'); s.textContent = (ORDRE.find(o => o.slug === p.slug) || {}).label + ' · ' + (idx + 1) + ' / ' + liste.length; $('vtitle').append(s);
+  $('dl').href = 'photos/full/' + p.id + '.jpg';
+  $('dl').setAttribute('download', nomFichier(p));
+  $('viewer').classList.add('open');
+  $('viewer').setAttribute('aria-hidden', 'false');
+  // précharge les voisines
+  [idx + 1, idx - 1].forEach(j => { const q = liste[(j + liste.length) % liste.length]; if (q) new Image().src = 'photos/full/' + q.id + '.jpg'; });
+}
+function fermer() { $('viewer').classList.remove('open'); $('viewer').setAttribute('aria-hidden', 'true'); idx = -1; }
+
+$('prec').onclick = () => ouvrir(idx - 1);
+$('suiv').onclick = () => ouvrir(idx + 1);
+$('fermer').onclick = fermer;
+$('vimg').onclick = () => ouvrir(idx + 1);
+document.addEventListener('keydown', e => {
+  if (idx < 0) return;
+  if (e.key === 'ArrowRight') ouvrir(idx + 1);
+  else if (e.key === 'ArrowLeft') ouvrir(idx - 1);
+  else if (e.key === 'Escape') fermer();
+});
+// balayage sur mobile
+let x0 = null;
+$('viewer').addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
+$('viewer').addEventListener('touchend', e => {
+  if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; x0 = null;
+  if (Math.abs(dx) > 50) ouvrir(idx + (dx < 0 ? 1 : -1));
+});
+
+// réglette de taille
+const r = $('taille');
+try { const v = localStorage.getItem('x77-str-taille'); if (v) r.value = v; } catch (e) {}
+const appliquer = () => document.documentElement.style.setProperty('--thumb', r.value + 'px');
+r.oninput = () => { appliquer(); try { localStorage.setItem('x77-str-taille', r.value); } catch (e) {} };
+appliquer();
+
+const h = location.hash.slice(1);
+if (ORDRE.some(o => o.slug === h)) courante = h;
+$('total').textContent = PHOTOS.length;
+menu(); afficher();
+</script>
+</body>
+</html>
