@@ -35,6 +35,10 @@
     .tf { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; padding: 7px 0; border-bottom: 1px solid rgba(148, 163, 184, 0.12); }
     .tf:last-child { border-bottom: 0; }
     .tf span { display: block; color: var(--text-main); font-weight: 600; font-size: 0.92rem; }
+    .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; align-items: center; width: 100%; }
+    .duo figure { margin: 0; }
+    .duo .temps-forts { border-top: 0; padding-top: 0; }
+    @media (max-width: 760px) { .duo { grid-template-columns: 1fr; } }
     /* Photo dans le cadre de présentation */
     .audio-card .photo {
       width: 100%;
@@ -53,8 +57,9 @@
       <!-- Colonne gauche : vidéo souvenir -->
       <div class="left videos">
         <div class="videos-title">La vidéo souvenir</div>
+        <div class="duo">
         <figure>
-          <video controls preload="metadata" poster="video-poster.jpg" style="aspect-ratio: 9 / 16; object-fit: contain; background: #000">
+          <video controls preload="metadata" poster="video-poster.jpg" style="aspect-ratio: 9 / 16; width: 100%; height: auto; object-fit: contain; background: #000; display: block">
             <source src="https://github.com/tdeviaris/X77/releases/download/v5-strasbourg/strasbourg-x77-2022.mp4" type="video/mp4">
             Votre navigateur ne supporte pas l'élément vidéo HTML5.
           </video>
@@ -66,6 +71,7 @@
           <div class="tf"><span>Vendredi 9</span>Cour européenne des droits de l'homme, Conseil de l'Europe et Parlement européen ; visite musicale de la cathédrale ; la vieille ville en Batorama ; choucroute chez Kammerzell.</div>
           <div class="tf"><span>Samedi 10</span>Kaysersberg, dégustation chez Rolly-Gassmann, le Haut-Kœnigsbourg, puis soirée de gala à l'Ancienne Douane.</div>
           <div class="tf"><span>Dimanche 11</span>Messe à la cathédrale autour de Luc Ravel, visites du vieux Strasbourg et cocktail de clôture dans sa résidence.</div>
+        </div>
         </div>
       </div>
 
@@ -85,7 +91,7 @@
             141 participants ont fêté à Strasbourg le 45<sup>e</sup> anniversaire de la promotion, accueillis par notre camarade Luc Ravel,
             alors archevêque de Strasbourg. Quatre jours de rencontres au cœur des institutions européennes, de découvertes en Alsace
             et d'échanges amicaux, autour de l'ouvrage collectif « Le Progrès », auquel près de cinquante camarades et leurs proches
-            ont contribué, et des résultats du traditionnel questionnaire de promotion, consacré cette année au passage à la retraite.
+            ont contribué, et du traditionnel questionnaire de promotion, consacré cette année au passage à la retraite.
           </p>
           <p class="description">
             L'anniversaire a été organisé par nos kessiers Philippe Charaix et Olivier Martin, avec Pierre Balsollier, Christine Blondel,
@@ -117,33 +123,5 @@
       </div>
     </section>
   </main>
-  <script>
-    // Ajuste la largeur de la vidéo pour que la colonne de gauche ne dépasse pas la hauteur de celle de droite
-    (function () {
-      var shell = document.querySelector('.shell');
-      var left = document.querySelector('.left.videos');
-      var right = document.querySelector('.right');
-      var figs = left.querySelectorAll('figure');
-      function fit() {
-        figs.forEach(function (f) { f.style.maxWidth = ''; });
-        if (window.innerWidth < 900) return;
-        shell.style.alignItems = 'flex-start';
-        for (var i = 0; i < 3; i++) {
-          var excess = left.getBoundingClientRect().height - right.getBoundingClientRect().height;
-          if (excess < 2) break;
-          var v = figs[0].querySelector('video');
-          var h = v.getBoundingClientRect().height - excess;
-          var r = (v.videoWidth && v.videoHeight) ? v.videoWidth / v.videoHeight : 9 / 16;
-          var w = Math.min(Math.max(h * r, 160), left.clientWidth - 48);
-          figs.forEach(function (f) { f.style.maxWidth = w + 'px'; });
-        }
-        shell.style.alignItems = '';
-      }
-      left.querySelectorAll('video').forEach(function (v) { v.addEventListener('loadedmetadata', fit); });
-      window.addEventListener('load', fit);
-      window.addEventListener('resize', fit);
-      fit();
-    })();
-  </script>
 </body>
 </html>
