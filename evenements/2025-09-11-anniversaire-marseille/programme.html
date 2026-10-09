@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Programme – Anniversaire X77 à Marseille (11-14 septembre 2025)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --bg: #020617;
+      --card: #0b1222;
+      --accent: #f97316;
+      --accent-soft: rgba(249, 115, 22, 0.18);
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --border-soft: rgba(148, 163, 184, 0.4);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      background: radial-gradient(circle at top, #111827, var(--bg) 60%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      padding: 32px 24px 48px;
+      line-height: 1.55;
+    }
+    main { max-width: 1100px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 28px; }
+    .brand { font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+    h1 { font-size: 2.1rem; margin: 6px 0 6px; }
+    header p { color: var(--text-muted); }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 18px; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      border-radius: 999px; border: 1px solid var(--border-soft);
+      color: var(--text-main); text-decoration: none; padding: 9px 16px; font-size: 0.92rem;
+      transition: border-color .15s, background .15s;
+    }
+    .btn:hover { border-color: var(--accent); background: var(--accent-soft); }
+    .btn.primary { background: var(--accent); border-color: var(--accent); color: #111827; font-weight: 600; }
+    .days { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+    .day {
+      background: var(--card); border: 1px solid var(--border-soft); border-radius: 20px;
+      padding: 22px 24px; box-shadow: 0 30px 60px -28px rgba(0, 0, 0, 0.9);
+    }
+    .day h2 { font-size: 1.25rem; display: flex; align-items: baseline; gap: 10px; margin-bottom: 14px; }
+    .day h2 span { color: var(--accent); font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; }
+    .item { display: grid; grid-template-columns: 62px 1fr; gap: 12px; padding: 10px 0; border-top: 1px solid rgba(148, 163, 184, 0.16); }
+    .item:first-of-type { border-top: 0; }
+    .h { color: var(--accent); font-weight: 600; font-variant-numeric: tabular-nums; }
+    .item strong { display: block; }
+    .item p { color: var(--text-muted); font-size: 0.9rem; margin-top: 3px; }
+    .lieu { color: #cbd5e1; font-size: 0.86rem; margin-top: 3px; }
+    .lieu::before { content: "📍 "; }
+    .choix { margin-top: 6px; padding-left: 14px; border-left: 2px solid var(--accent-soft); }
+    .choix div { margin-top: 8px; }
+    .note { text-align: center; color: var(--text-muted); font-size: 0.85rem; margin-top: 26px; }
+    .note a { color: var(--accent); }
+    @media (max-width: 820px) {
+      body { padding: 20px 16px 36px; }
+      h1 { font-size: 1.6rem; }
+      .days { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="brand">X77 · Événements</div>
+    <h1>Le programme des quatre jours</h1>
+    <p>48<sup>e</sup> anniversaire de la promotion X77 à Marseille, du jeudi 11 au dimanche 14 septembre 2025</p>
+    <div class="actions">
+      <a class="btn" href="https://sites.google.com/view/x77-marseille/accueil" target="_blank" rel="noopener">🌐 Site de l'anniversaire : sites.google.com/view/x77-marseille</a>
+      <a class="btn" href="photos.html" target="_blank">📷 Album photo</a>
+      <a class="btn primary" href="index.html">← Retour à l'événement</a>
+    </div>
+  </header>
+
+  <div class="days">
+    <section class="day">
+      <h2><span>Jour 1</span> Jeudi 11 septembre</h2>
+      <div class="item"><div class="h">Après-midi</div><div><strong>Arrivée aux hôtels</strong>
+        <p>Accès à Notre-Dame de la Garde par le bus 60 depuis l'arrêt « Vieux Port Ballard » (environ 15 minutes).</p></div></div>
+      <div class="item"><div class="h">16 h 45</div><div><strong>Retrouvailles et visite de Notre-Dame de la Garde</strong>
+        <div class="lieu">Esplanade supérieure, accueil de la basilique</div>
+        <p>Visite de la basilique avec des guides, panorama sur toute la ville et présentation de Marseille et de ses quartiers.</p></div></div>
+      <div class="item"><div class="h">18 h 30</div><div><strong>Descente à pied par le Bois sacré</strong>
+        <p>Chemin des bunkers et des chars, avec les récits historiques des guides, jusqu'au bord de mer.</p></div></div>
+      <div class="item"><div class="h">19 h 15</div><div><strong>Cocktail dînatoire « Chez Jeannot »</strong>
+        <div class="lieu">129, rue du Vallon des Auffes</div></div></div>
+    </section>
+
+    <section class="day">
+      <h2><span>Jour 2</span> Vendredi 12 septembre</h2>
+      <div class="item"><div class="h">10 h</div><div><strong>Visite au choix</strong>
+        <div class="choix">
+          <div><strong>La Grotte Cosquer</strong><div class="lieu">Promenade Robert Laffont, 13002</div>
+            <p>Réplique de la grotte et de ses peintures préhistoriques, film sur sa découverte, visite du musée et de la section consacrée à la montée des eaux.</p></div>
+          <div><strong>La Compagnie du Ponant, avec Yann Duchesne</strong><div class="lieu">408, avenue du Prado, 13008</div>
+            <p>Présentation de la compagnie de croisière sous pavillon français, de son projet de navire « neutre en carbone », visite et rencontre avec un commandant.</p></div>
+          <div><strong>Le Jivaro Sailing Team et Afazik Impulse, avec Yves Grosjean</strong><div class="lieu">La Nautique, pavillon flottant, quai de Rive-Neuve</div>
+            <p>La course au large en équipage amateur, et le retour à l'emploi des personnes atteintes d'un handicap cognitif.</p></div>
+        </div></div></div>
+      <div class="item"><div class="h">12 h 30</div><div><strong>Déjeuner libre</strong></div></div>
+      <div class="item"><div class="h">14 h 15</div><div><strong>Grande balade guidée dans le Vieux Marseille</strong>
+        <div class="lieu">Départ du Musée d'Histoire (Port antique), 2, rue Henri-Barbusse</div>
+        <p>2 600 ans d'histoire avec six guides : le Panier, l'Antiquité, la peste de 1720, la Vieille Charité, le quartier Saint-Jean, la French Connection, la transformation du port…</p></div></div>
+      <div class="item"><div class="h">19 h 30</div><div><strong>Dîner-débat avec le général David Galtier</strong>
+        <div class="lieu">Novotel Marseille Vieux-Port, 36, boulevard Charles-Livon</div>
+        <p>Ancien commandant de la gendarmerie de la région PACA, maire du 7<sup>e</sup> secteur : la lutte contre la criminalité à Marseille et son expérience d'élu local.</p></div></div>
+    </section>
+
+    <section class="day">
+      <h2><span>Jour 3</span> Samedi 13 septembre</h2>
+      <div class="item"><div class="h">10 h</div><div><strong>Croisière dans les calanques, déjeuner à bord</strong>
+        <div class="lieu">Départ du Vieux-Port, angle quai du Port et quai des Belges</div>
+        <p>Météo oblige, le bateau, plus grand que prévu, n'a pas pu faire escale à Cassis.</p></div></div>
+      <div class="item"><div class="h">14 h</div><div><strong>Retour au port et temps libre</strong></div></div>
+      <div class="item"><div class="h">19 h 30</div><div><strong>Dîner de gala</strong>
+        <div class="lieu">Restaurant de l'Union Nautique Marseillaise, 34, boulevard Charles-Livon</div>
+        <p>Résultats de l'enquête de promotion et remise de l'ouvrage de l'anniversaire.</p></div></div>
+    </section>
+
+    <section class="day">
+      <h2><span>Jour 4</span> Dimanche 14 septembre</h2>
+      <div class="item"><div class="h">9 h</div><div><strong>Messe à l'abbaye Saint-Victor</strong>
+        <p>Proposée par notre camarade Luc Ravel, pour ceux qui le souhaitent. L'abbaye, fondée au V<sup>e</sup> siècle par Jean Cassien, a rayonné sur toute la Provence autour de l'an mil.</p></div></div>
+      <div class="item"><div class="h">10 h</div><div><strong>Promenade à pied jusqu'au Château Saint-Victor</strong></div></div>
+      <div class="item"><div class="h">12 h</div><div><strong>Cocktail déjeunatoire de clôture</strong>
+        <div class="lieu">Château Saint-Victor, 142, rue du Commandant-Rolland, 13008</div>
+        <p>Résidence du gouverneur militaire de Marseille : demeure néoclassique achevée en 1832, au cœur d'un parc arboré, avec une grande terrasse.</p></div></div>
+      <div class="item"><div class="h">15 h</div><div><strong>Au revoir</strong></div></div>
+    </section>
+  </div>
+
+  <p class="note">Programme repris du site de l'anniversaire, <a href="https://sites.google.com/view/x77-marseille/accueil" target="_blank" rel="noopener">sites.google.com/view/x77-marseille</a>, réalisé par l'équipe d'organisation.</p>
+</main>
+</body>
+</html>
