@@ -43,6 +43,11 @@
     .brand { font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
     aside h1 { font-size: 1.35rem; line-height: 1.25; margin: 6px 0 4px; }
     .sub { color: var(--text-muted); font-size: 0.88rem; margin-bottom: 18px; }
+    aside a.brand, aside h1 a { color: inherit; text-decoration: none; }
+    aside a.brand:hover, aside h1 a:hover { color: var(--accent); }
+    aside a.brand:hover { text-decoration: underline; }
+    aside h1 a::after { content: " ↩"; font-size: 0.8em; color: var(--text-muted); }
+    .sous-titre { color: var(--text-main); font-weight: 600; font-size: 1rem; margin: -2px 0 4px; }
     .rubrique {
       display: flex; justify-content: space-between; align-items: center;
       width: 100%; text-align: left;
@@ -164,9 +169,10 @@
 <body>
 <div class="app">
   <aside>
-    <div class="brand">X77 · Événements</div>
-    <h1>Trombinoscope des présents</h1>
-    <div class="sub">Anniversaire à Marseille, 11 – 14 septembre 2025 · <span id="total"></span> présents</div>
+    <a class="brand" href="../../index.html" title="Retour à l'accueil du site">X77 · Événements</a>
+    <h1><a href="index.html" title="Retour à la page de l'événement">Anniversaire à Marseille</a></h1>
+    <div class="sous-titre">Trombinoscope des présents</div>
+    <div class="sub">11 – 14 septembre 2025 · <span id="total"></span> présents</div>
     <nav class="rubriques" id="rubriques"></nav>
     <div class="credits">Portraits des participants à l'anniversaire.</div>
     <a class="back" href="photos.html">📷 Album photo, jour par jour</a>
