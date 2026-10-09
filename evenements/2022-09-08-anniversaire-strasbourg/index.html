@@ -54,7 +54,7 @@
       <div class="left videos">
         <div class="videos-title">La vidéo souvenir</div>
         <figure>
-          <video controls preload="metadata" poster="video-poster.jpg">
+          <video controls preload="metadata" poster="video-poster.jpg" style="aspect-ratio: 9 / 16; object-fit: contain; background: #000">
             <source src="https://github.com/tdeviaris/X77/releases/download/v5-strasbourg/strasbourg-x77-2022.mp4" type="video/mp4">
             Votre navigateur ne supporte pas l'élément vidéo HTML5.
           </video>
@@ -84,7 +84,12 @@
           <p class="description">
             141 participants ont fêté à Strasbourg le 45<sup>e</sup> anniversaire de la promotion, accueillis par notre camarade Luc Ravel,
             alors archevêque de Strasbourg. Quatre jours de rencontres au cœur des institutions européennes, de découvertes en Alsace
-            et d'échanges amicaux, autour de l'ouvrage collectif « Le Progrès ».
+            et d'échanges amicaux, autour de l'ouvrage collectif « Le Progrès », auquel près de cinquante camarades et leurs proches
+            ont contribué, et des résultats du traditionnel questionnaire de promotion, consacré cette année au passage à la retraite.
+          </p>
+          <p class="description">
+            L'anniversaire a été organisé par nos kessiers Philippe Charaix et Olivier Martin, avec Pierre Balsollier, Christine Blondel,
+            Jean-Baptiste Cuisinier, Pierre Liautaud, Georges Passet et Patrick Tejedor, et, sur place, Luc Ravel et Michèle Cardoso.
           </p>
 
           <p class="credits">Photos : Tristan de Viaris et Patrick Tejedor. Vidéo : Stéphanie Moser.</p>
@@ -128,7 +133,8 @@
           if (excess < 2) break;
           var v = figs[0].querySelector('video');
           var h = v.getBoundingClientRect().height - excess;
-          var w = Math.min(Math.max(h * 16 / 9, 240), left.clientWidth - 48);
+          var r = (v.videoWidth && v.videoHeight) ? v.videoWidth / v.videoHeight : 9 / 16;
+          var w = Math.min(Math.max(h * r, 160), left.clientWidth - 48);
           figs.forEach(function (f) { f.style.maxWidth = w + 'px'; });
         }
         shell.style.alignItems = '';
