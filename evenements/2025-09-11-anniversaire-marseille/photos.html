@@ -251,14 +251,14 @@ function afficher() {
   const g = $('grille');
   g.innerHTML = ''; liste = [];
   const groupes = courante === 'toutes' ? ORDRE : ORDRE.filter(r => r.slug === courante);
-  const label = courante === 'toutes' ? 'Toutes les photos' : groupes[0].jour + ' · ' + groupes[0].label;
+  const label = courante === 'toutes' ? 'Toutes les photos' : (groupes[0].slug === 'trombi' ? groupes[0].label : groupes[0].jour + ' · ' + groupes[0].label);
   const n = courante === 'toutes' ? PHOTOS.length : PHOTOS.filter(p => p.slug === courante).length;
   $('titre').innerHTML = ''; $('titre').append(label);
   const sm = document.createElement('small'); sm.textContent = n + ' photo' + (n > 1 ? 's' : ''); $('titre').append(sm);
   groupes.forEach(r => {
     const ps = PHOTOS.filter(p => p.slug === r.slug);
     if (!ps.length) return;
-    if (courante === 'toutes') { const h = document.createElement('div'); h.className = 'section-title'; h.textContent = r.jour + ' · ' + r.label; g.appendChild(h); }
+    if (courante === 'toutes') { const h = document.createElement('div'); h.className = 'section-title'; h.textContent = r.slug === 'trombi' ? r.label : r.jour + ' · ' + r.label; g.appendChild(h); }
     const grid = document.createElement('div'); grid.className = 'grid';
     ps.forEach(p => grid.appendChild(vignette(p)));
     g.appendChild(grid);
