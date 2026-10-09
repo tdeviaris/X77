@@ -15,7 +15,7 @@
       gap: 22px;
       padding: 28px 24px;
     }
-    .left.videos figure { width: 100%; margin: 0; }
+    .left.videos figure { width: 100%; margin: 0 auto; }
     .left.videos video { max-height: none; margin-top: 0; }
     .left.videos figcaption {
       color: var(--text-muted);
@@ -108,5 +108,30 @@
       </div>
     </section>
   </main>
+  <script>
+    // Ajuste la largeur des vidéos pour que la colonne de gauche ait la même hauteur que celle de droite
+    (function () {
+      var shell = document.querySelector('.shell');
+      var left = document.querySelector('.left.videos');
+      var right = document.querySelector('.right');
+      var figs = left.querySelectorAll('figure');
+      function fit() {
+        figs.forEach(function (f) { f.style.maxWidth = ''; });
+        if (window.innerWidth < 900) return;            // affichage mobile : colonnes empilées
+        shell.style.alignItems = 'flex-start';
+        var excess = left.getBoundingClientRect().height - right.getBoundingClientRect().height;
+        if (excess > 0) {
+          var v = figs[0].querySelector('video');
+          var h = v.getBoundingClientRect().height - excess / figs.length;
+          var w = Math.max(h * 16 / 9, 240);
+          figs.forEach(function (f) { f.style.maxWidth = w + 'px'; });
+        }
+        shell.style.alignItems = '';
+      }
+      window.addEventListener('load', fit);
+      window.addEventListener('resize', fit);
+      fit();
+    })();
+  </script>
 </body>
 </html>
