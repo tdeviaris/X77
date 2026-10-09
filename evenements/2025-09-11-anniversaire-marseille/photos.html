@@ -91,7 +91,10 @@
       background: #0f172a; border: 1px solid rgba(148,163,184,0.25);
       cursor: zoom-in; padding: 0;
     }
-    .thumb.portrait { aspect-ratio: 3 / 4; }
+    .thumb.portrait { aspect-ratio: auto; display: flex; flex-direction: column; }
+    .thumb.portrait img { aspect-ratio: 3 / 4; height: auto; flex: none; }
+    .thumb.portrait .cap { position: static; background: none; font-size: 2.4rem; line-height: 1.1; white-space: normal; text-overflow: clip; text-align: center; font-weight: 600; padding: 10px 8px 12px; }
+    .vtitle.trombi { font-size: 1.8rem; font-weight: 600; }
     .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .25s; }
     .thumb:hover img { transform: scale(1.04); }
     .thumb:hover, .thumb:focus-visible { border-color: var(--accent); outline: none; }
@@ -272,6 +275,7 @@ function ouvrir(k) {
   $('vimg').src = 'photos/full/' + p.id + '.jpg';
   $('vimg').alt = p.titre;
   $('vtitle').innerHTML = '';
+  $('vtitle').classList.toggle('trombi', p.slug === 'trombi');
   $('vtitle').append(p.titre);
   const s = document.createElement('span'); s.textContent = (ORDRE.find(o => o.slug === p.slug) || {}).label + ' · ' + (idx + 1) + ' / ' + liste.length; $('vtitle').append(s);
   $('dl').href = 'photos/full/' + p.id + '.jpg';
