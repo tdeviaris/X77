@@ -35,7 +35,7 @@
     .tf { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; padding: 7px 0; border-bottom: 1px solid rgba(148, 163, 184, 0.12); }
     .tf:last-child { border-bottom: 0; }
     .tf span { display: block; color: var(--text-main); font-weight: 600; font-size: 0.92rem; }
-    .duo { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; align-items: center; width: 100%; }
+    .duo { display: grid; grid-template-columns: auto 1fr; gap: 22px; align-items: center; width: 100%; }
     .duo figure { margin: 0; }
     .duo .temps-forts { border-top: 0; padding-top: 0; }
     @media (max-width: 760px) { .duo { grid-template-columns: 1fr; } }
@@ -59,7 +59,7 @@
         <div class="videos-title">La vidéo souvenir</div>
         <div class="duo">
         <figure>
-          <video controls preload="metadata" poster="video-poster.jpg" style="aspect-ratio: 9 / 16; width: 100%; height: auto; object-fit: contain; background: #000; display: block">
+          <video controls preload="metadata" poster="video-poster.jpg" style="aspect-ratio: 9 / 16; width: 260px; max-width: 100%; height: auto; object-fit: contain; background: #000; display: block">
             <source src="https://github.com/tdeviaris/X77/releases/download/v5-strasbourg/strasbourg-x77-2022.mp4" type="video/mp4">
             Votre navigateur ne supporte pas l'élément vidéo HTML5.
           </video>
@@ -123,5 +123,29 @@
       </div>
     </section>
   </main>
+  <script>
+    // La vidéo (verticale) prend la hauteur du contenu du volet droit
+    (function () {
+      var left = document.querySelector('.left.videos');
+      var right = document.querySelector('.right');
+      var shell = document.querySelector('.shell');
+      var v = left.querySelector('video');
+      var fig = left.querySelector('figure');
+      function fit() {
+        if (window.innerWidth < 900) { v.style.width = ''; fig.style.width = ''; return; }
+        shell.style.alignItems = 'flex-start';
+        for (var i = 0; i < 4; i++) {
+          var other = left.getBoundingClientRect().height - v.getBoundingClientRect().height;
+          var h = right.getBoundingClientRect().height - other;
+          var w = Math.max(200, Math.min(h * 9 / 16, left.clientWidth * 0.6));
+          v.style.width = w + 'px'; fig.style.width = w + 'px';
+        }
+        shell.style.alignItems = '';
+      }
+      window.addEventListener('load', fit);
+      window.addEventListener('resize', fit);
+      fit();
+    })();
+  </script>
 </body>
 </html>
