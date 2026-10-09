@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Anniversaire X77 à Bordeaux – 29 septembre - 1er octobre 2017</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../../assets/styles.css">
+  <style>
+    /* Colonne gauche : aperçu photo et temps forts */
+    .left.apercu {
+      aspect-ratio: auto;
+      height: auto;
+      flex-direction: column;
+      justify-content: center;
+      gap: 22px;
+      padding: 28px 24px;
+    }
+    .left.apercu .apercu-title {
+      color: var(--text-main);
+      font-weight: 600;
+      font-size: 1.05rem;
+      text-align: center;
+    }
+    .mosaique {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+    .mosaique a { display: block; overflow: hidden; border-radius: 10px; aspect-ratio: 4 / 3; background: #0f172a; }
+    .mosaique a:first-child { grid-column: span 2; aspect-ratio: 16 / 9; }
+    .mosaique img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .3s; }
+    .mosaique a:hover img { transform: scale(1.05); }
+    .audio-card .credits { color: var(--text-muted); font-size: 0.82rem; font-style: italic; margin: 10px 0 4px; }
+    .temps-forts { width: 100%; border-top: 1px solid rgba(148, 163, 184, 0.25); padding-top: 16px; }
+    .tf-titre { color: var(--accent); font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; margin-bottom: 8px; }
+    .tf { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; padding: 7px 0; border-bottom: 1px solid rgba(148, 163, 184, 0.12); }
+    .tf:last-child { border-bottom: 0; }
+    .tf span { display: block; color: var(--text-main); font-weight: 600; font-size: 0.92rem; }
+    .audio-card .photo {
+      width: 100%;
+      border-radius: 10px;
+      margin: 10px 0 4px;
+      display: block;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <section class="shell">
+      <!-- Colonne gauche : aperçu de l'album et temps forts -->
+      <div class="left apercu">
+        <div class="apercu-title">Le week-end en images</div>
+        <div class="mosaique">
+          <a href="photos.html#ven-chartrons" target="_blank"><img src="photos/thumb/DSC_5097-Panorama.jpg" alt="Les quais de Bordeaux, vendredi soir"></a>
+          <a href="photos.html#sam-figeac" target="_blank"><img src="photos/thumb/DSC_5135.jpg" alt="Château Figeac"></a>
+          <a href="photos.html#dim-vieux-bordeaux" target="_blank"><img src="photos/thumb/DSC_5375.jpg" alt="Le vieux Bordeaux"></a>
+        </div>
+        <div class="temps-forts">
+          <div class="tf-titre">Les temps forts</div>
+          <div class="tf"><span>Vendredi 29</span>Visite du Laser Mégajoule au CEA/CESTA du Barp ou de Dassault Aviation à Mérignac ; réception à l'hôtel de ville, puis dîner chez Ibaïa, quai des Chartrons.</div>
+          <div class="tf"><span>Samedi 30</span>Les châteaux Figeac et Siaurac, déjeuner dans le parc de Siaurac, Saint-Émilion, puis soirée à la Cité du Vin.</div>
+          <div class="tf"><span>Dimanche 1<sup>er</sup></span>Messe à Notre-Dame célébrée par Luc Ravel, visites guidées du vieux Bordeaux et déjeuner de clôture au Café du Port.</div>
+        </div>
+      </div>
+
+      <!-- Colonne droite : présentation et documents -->
+      <div class="right">
+        <header>
+          <h1>Anniversaire à Bordeaux</h1>
+          <h2>40<sup>e</sup> anniversaire de la promotion X77, du vendredi 29 septembre au dimanche 1<sup>er</sup> octobre 2017</h2>
+        </header>
+
+        <div class="audio-card">
+          <strong>Trois jours entre industrie, grands crus et Siècle d'or</strong>
+
+          <img class="photo" src="couverture.jpg" alt="Saint-Émilion – anniversaire X77 à Bordeaux">
+
+          <p class="description">
+            81 camarades et leurs conjoints, soit 136 participants, ont fêté à Bordeaux le 40<sup>e</sup> anniversaire de la promotion.
+            Trois jours de découvertes industrielles, de grands châteaux de Saint-Émilion et de promenades dans le Bordeaux du XVIII<sup>e</sup> siècle,
+            mais avant tout de retrouvailles dans une ambiance très amicale. Le dîner du samedi à la Cité du Vin a été l'occasion de présenter
+            les résultats du sondage de promotion, et le dimanche notre camarade Luc Ravel a célébré la messe à Notre-Dame devant une cinquantaine d'entre nous.
+            L'anniversaire a aussi donné lieu à un ouvrage collectif réunissant les « témoignages souvenirs » de 33 camarades et 14 « témoignages perspectives ».
+          </p>
+          <p class="description">
+            L'anniversaire a été organisé par nos kessiers Philippe Charaix et Olivier Martin, avec Pierre Balsollier, Christine Blondel,
+            Pierre Liautaud, Daniel Lippera, Michel Maschi, Bertrand Rémy et Patrick Tejedor.
+          </p>
+
+          <p class="credits">Photos : Tristan de Viaris.</p>
+
+          <div class="links">
+            <a class="button" href="photos.html" target="_blank">
+              <span class="button-icon">📷</span>
+              Album photo, jour par jour
+            </a>
+            <a class="button" href="programme.html">
+              <span class="button-icon">🗓️</span>
+              Le programme des trois jours
+            </a>
+            <a class="button" href="Laser-Megajoule.pdf" target="_blank" rel="noopener">
+              <span class="button-icon">📄</span>
+              Présentation du Laser Mégajoule (PDF)
+            </a>
+            <a class="button primary" href="../../index.html">
+              <span class="button-icon">🏠</span>
+              Retour à l'accueil
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Photos – Anniversaire X77 à Bordeaux</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --bg: #020617;
+      --panel: #0b1222;
+      --accent: #f97316;
+      --accent-soft: rgba(249, 115, 22, 0.18);
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --border-soft: rgba(148, 163, 184, 0.4);
+      --side: 270px;
+      --thumb: 220px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      background: radial-gradient(circle at top, #111827, var(--bg) 60%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      overflow: hidden;
+    }
+    .app { display: flex; height: 100vh; }
+
+    /* Colonne des rubriques */
+    aside {
+      flex: 0 0 var(--side);
+      width: var(--side);
+      border-right: 1px solid var(--border-soft);
+      background: rgba(2, 6, 23, 0.85);
+      display: flex;
+      flex-direction: column;
+      padding: 26px 18px 18px;
+      gap: 6px;
+      overflow-y: auto;
+      z-index: 20;
+    }
+    .brand { font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+    aside h1 { font-size: 1.35rem; line-height: 1.25; margin: 6px 0 4px; }
+    .sub { color: var(--text-muted); font-size: 0.88rem; margin-bottom: 18px; }
+    aside a.brand, aside h1 a { color: inherit; text-decoration: none; }
+    aside a.brand:hover, aside h1 a:hover { color: var(--accent); }
+    aside a.brand:hover { text-decoration: underline; }
+    aside h1 a::after { content: " ↩"; font-size: 0.8em; color: var(--text-muted); }
+    .sous-titre { color: var(--text-main); font-weight: 600; font-size: 1rem; margin: -2px 0 4px; }
+    .rubrique {
+      display: flex; justify-content: space-between; align-items: center;
+      width: 100%; text-align: left;
+      background: transparent; color: var(--text-main);
+      border: 1px solid transparent; border-radius: 999px;
+      padding: 9px 14px; font: inherit; font-size: 0.95rem; cursor: pointer;
+      transition: background .15s, border-color .15s;
+    }
+    .rubrique:hover { background: rgba(148, 163, 184, 0.10); }
+    .rubrique.active { background: var(--accent-soft); border-color: var(--accent); }
+    .rubrique .n { color: var(--text-muted); font-size: 0.8rem; font-variant-numeric: tabular-nums; }
+    .rubrique.active .n { color: var(--accent); }
+    .jour { color: var(--accent); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; margin: 14px 14px 4px; }
+    .sep { border-top: 1px solid rgba(148,163,184,0.2); margin: 8px 4px; }
+    .credits { margin-top: auto; padding-top: 18px; color: var(--text-muted); font-size: 0.78rem; line-height: 1.45; }
+    .back {
+      margin-top: 8px; padding-top: 4px;
+      color: var(--text-muted); font-size: 0.85rem; text-decoration: none;
+    }
+    .back:hover { color: var(--accent); }
+
+    /* Zone principale */
+    .main { flex: 1; display: flex; flex-direction: column; min-width: 0; position: relative; }
+    .toolbar {
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      padding: 20px 28px 14px; border-bottom: 1px solid rgba(148,163,184,0.18);
+    }
+    .toolbar h2 { font-size: 1.15rem; font-weight: 600; }
+    .toolbar h2 small { color: var(--text-muted); font-weight: 400; font-size: 0.9rem; margin-left: 8px; }
+    .zoom { display: flex; align-items: center; gap: 10px; color: var(--text-muted); font-size: 0.85rem; }
+    .zoom svg { width: 16px; height: 16px; fill: currentColor; }
+    input[type=range] { width: 170px; accent-color: var(--accent); cursor: pointer; }
+    .grid-wrap { flex: 1; overflow-y: auto; padding: 22px 28px 40px; }
+    .section-title {
+      color: var(--accent); font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase;
+      font-weight: 600; margin: 8px 0 12px;
+    }
+    .section-title:not(:first-child) { margin-top: 30px; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(var(--thumb), 1fr));
+      gap: 12px;
+    }
+    .thumb {
+      position: relative; aspect-ratio: 4 / 3; border-radius: 10px; overflow: hidden;
+      background: #0f172a; border: 1px solid rgba(148,163,184,0.25);
+      cursor: zoom-in; padding: 0;
+    }
+    .thumb.portrait { aspect-ratio: auto; display: flex; flex-direction: column; }
+    .thumb.portrait img { aspect-ratio: 3 / 4; height: auto; flex: none; }
+    .thumb.portrait .cap { position: static; background: none; font-size: 1.2rem; line-height: 1.12; white-space: normal; overflow-wrap: anywhere; text-overflow: clip; text-align: center; font-weight: 600; padding: 10px 8px 12px; }
+    .vtitle.trombi { font-size: 1.8rem; font-weight: 600; }
+    .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .25s; }
+    .thumb:hover img { transform: scale(1.04); }
+    .thumb:hover, .thumb:focus-visible { border-color: var(--accent); outline: none; }
+    .thumb .cap {
+      position: absolute; left: 0; right: 0; bottom: 0;
+      padding: 18px 10px 7px; font-size: 0.8rem; text-align: left; color: #fff;
+      background: linear-gradient(transparent, rgba(0,0,0,0.75));
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+
+    /* Visionneuse : couvre tout sauf la colonne des rubriques */
+    .viewer {
+      position: fixed; top: 0; right: 0; bottom: 0; left: var(--side);
+      background: rgba(2, 6, 23, 0.97);
+      display: none; flex-direction: column; z-index: 10;
+    }
+    .viewer.open { display: flex; }
+    .vbar {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 14px 20px; border-bottom: 1px solid rgba(148,163,184,0.18);
+    }
+    .vtitle { font-size: 1rem; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .vtitle span { color: var(--text-muted); font-size: 0.85rem; margin-left: 10px; }
+    .vactions { display: flex; gap: 10px; flex-shrink: 0; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      border-radius: 999px; border: 1px solid var(--border-soft);
+      background: transparent; color: var(--text-main); text-decoration: none;
+      padding: 8px 15px; font: inherit; font-size: 0.88rem; cursor: pointer;
+      transition: border-color .15s, background .15s;
+    }
+    .btn:hover { border-color: var(--accent); background: var(--accent-soft); }
+    .btn.primary { background: var(--accent); border-color: var(--accent); color: #111827; font-weight: 600; }
+    .btn.primary:hover { filter: brightness(1.08); }
+    .btn svg { width: 15px; height: 15px; fill: currentColor; }
+    .stage { flex: 1; position: relative; display: flex; align-items: center; justify-content: center; min-height: 0; padding: 18px 70px; }
+    .stage img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px; box-shadow: 0 20px 50px -10px rgba(0,0,0,0.8); user-select: none; }
+    .nav {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 46px; height: 46px; border-radius: 50%;
+      border: 1px solid var(--border-soft); background: rgba(15,23,42,0.75); color: var(--text-main);
+      font-size: 1.5rem; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    }
+    .nav:hover { border-color: var(--accent); color: var(--accent); }
+    .nav.prev { left: 14px; } .nav.next { right: 14px; }
+    .hint { text-align: center; color: var(--text-muted); font-size: 0.78rem; padding: 0 0 12px; }
+
+    @media (max-width: 760px) {
+      :root { --side: 0px; }
+      body { overflow: auto; }
+      .app { flex-direction: column; height: auto; }
+      aside { flex: none; width: 100%; padding: 16px; border-right: 0; border-bottom: 1px solid var(--border-soft); }
+      .rubriques { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; }
+      .rubrique { width: auto; white-space: nowrap; gap: 8px; }
+      .sep, .back, .jour { display: none; }
+      .credits { display: block; margin: 8px 0 0; padding-top: 0; }
+      .sub { margin-bottom: 10px; }
+      .grid-wrap { overflow: visible; padding: 16px; }
+      .toolbar { padding: 14px 16px; flex-wrap: wrap; }
+      input[type=range] { width: 120px; }
+      .stage { padding: 10px; }
+      .nav { width: 38px; height: 38px; }
+      .btn .lbl { display: none; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <aside>
+    <a class="brand" href="../../index.html" title="Retour à l'accueil du site">X77 · Événements</a>
+    <h1><a href="index.html" title="Retour à la page de l'événement">Anniversaire à Bordeaux</a></h1>
+    <div class="sub">29 septembre – 1<sup>er</sup> octobre 2017 · <span id="total"></span> photos</div>
+    <nav class="rubriques" id="rubriques"></nav>
+    <div class="credits">Photos : Tristan de Viaris.</div>
+    <a class="back" href="index.html">← Retour à la page de l'événement</a>
+  </aside>
+
+  <section class="main">
+    <div class="toolbar">
+      <h2 id="titre"></h2>
+      <label class="zoom" title="Taille des vignettes">
+        <svg viewBox="0 0 24 24"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/></svg>
+        <input type="range" id="taille" min="120" max="520" step="10" value="160" aria-label="Taille des vignettes">
+        <svg viewBox="0 0 24 24" style="width:20px;height:20px"><path d="M3 3h18v18H3z"/></svg>
+      </label>
+    </div>
+    <div class="grid-wrap" id="grille"></div>
+  </section>
+</div>
+
+<div class="viewer" id="viewer" aria-hidden="true">
+  <div class="vbar">
+    <div class="vtitle" id="vtitle"></div>
+    <div class="vactions">
+      <a class="btn primary" id="dl" download>
+        <svg viewBox="0 0 24 24"><path d="M11 3h2v10.17l3.59-3.58L18 11l-6 6-6-6 1.41-1.41L11 13.17zM5 19h14v2H5z"/></svg>
+        <span class="lbl">Télécharger</span>
+      </a>
+      <button class="btn" id="fermer" title="Fermer (Échap)">
+        <svg viewBox="0 0 24 24"><path d="M18.3 5.71 12 12.01l-6.3-6.3-1.41 1.41 6.3 6.3-6.3 6.29 1.41 1.42 6.3-6.3 6.29 6.3 1.42-1.42-6.3-6.29 6.3-6.3z"/></svg>
+        <span class="lbl">Fermer</span>
+      </button>
+    </div>
+  </div>
+  <div class="stage">
+    <button class="nav prev" id="prec" aria-label="Photo précédente">‹</button>
+    <img id="vimg" alt="">
+    <button class="nav next" id="suiv" aria-label="Photo suivante">›</button>
+  </div>
+  <div class="hint">← → pour naviguer · Échap pour revenir aux vignettes</div>
+</div>
+
+<script>
+const PHOTOS = [{"id": "DSC_5036", "slug": "ven-mairie", "ts": "2017-09-29 18:46:54", "titre": "Vendredi 29 septembre 2017 · 18 h 46", "fichier": "X77 Bordeaux 2017 - 2017-09-29 18h46 - DSC_5036.jpg"}, {"id": "DSC_5037", "slug": "ven-mairie", "ts": "2017-09-29 18:47:34", "titre": "Vendredi 29 septembre 2017 · 18 h 47", "fichier": "X77 Bordeaux 2017 - 2017-09-29 18h47 - DSC_5037.jpg"}, {"id": "DSC_5050", "slug": "ven-mairie", "ts": "2017-09-29 19:12:11", "titre": "Vendredi 29 septembre 2017 · 19 h 12", "fichier": "X77 Bordeaux 2017 - 2017-09-29 19h12 - DSC_5050.jpg"}, {"id": "DSC_5051", "slug": "ven-mairie", "ts": "2017-09-29 19:12:52", "titre": "Vendredi 29 septembre 2017 · 19 h 12", "fichier": "X77 Bordeaux 2017 - 2017-09-29 19h12 - DSC_5051.jpg"}, {"id": "DSC_5053", "slug": "ven-mairie", "ts": "2017-09-29 19:16:25", "titre": "Vendredi 29 septembre 2017 · 19 h 16", "fichier": "X77 Bordeaux 2017 - 2017-09-29 19h16 - DSC_5053.jpg"}, {"id": "DSC_5056", "slug": "ven-mairie", "ts": "2017-09-29 19:16:57", "titre": "Vendredi 29 septembre 2017 · 19 h 16", "fichier": "X77 Bordeaux 2017 - 2017-09-29 19h16 - DSC_5056.jpg"}, {"id": "DSC_5057", "slug": "ven-mairie", "ts": "2017-09-29 19:17:43", "titre": "Vendredi 29 septembre 2017 · 19 h 17", "fichier": "X77 Bordeaux 2017 - 2017-09-29 19h17 - DSC_5057.jpg"}, {"id": "DSC_5059", "slug": "ven-mairie", "ts": "2017-09-29 19:18:50", "titre": "Vendredi 29 septembre 2017 · 19 h 18", "fichier": "X77 Bordeaux 2017 - 2017-09-29 19h18 - DSC_5059.jpg"}, {"id": "DSC_5065", "slug": "ven-mairie", "ts": "2017-09-29 19:20:00", "titre": "Vendredi 29 septembre 2017 · 19 h 20", "fichier": "X77 Bordeaux 2017 - 2017-09-29 19h20 - DSC_5065.jpg"}, {"id": "DSC_5071", "slug": "ven-chartrons", "ts": "2017-09-29 19:46:49", "titre": "Vendredi 29 septembre 2017 · 19 h 46", "fichier": "X77 Bordeaux 2017 - 2017-09-29 19h46 - DSC_5071.jpg"}, {"id": "DSC_5072", "slug": "ven-chartrons", "ts": "2017-09-29 19:47:50", "titre": "Vendredi 29 septembre 2017 · 19 h 47", "fichier": "X77 Bordeaux 2017 - 2017-09-29 19h47 - DSC_5072.jpg"}, {"id": "DSC_5075", "slug": "ven-chartrons", "ts": "2017-09-29 19:52:02", "titre": "Vendredi 29 septembre 2017 · 19 h 52", "fichier": "X77 Bordeaux 2017 - 2017-09-29 19h52 - DSC_5075.jpg"}, {"id": "DSC_5076", "slug": "ven-chartrons", "ts": "2017-09-29 19:53:47", "titre": "Vendredi 29 septembre 2017 · 19 h 53", "fichier": "X77 Bordeaux 2017 - 2017-09-29 19h53 - DSC_5076.jpg"}, {"id": "DSC_5077", "slug": "ven-chartrons", "ts": "2017-09-29 19:54:23", "titre": "Vendredi 29 septembre 2017 · 19 h 54", "fichier": "X77 Bordeaux 2017 - 2017-09-29 19h54 - DSC_5077.jpg"}, {"id": "DSC_5080", "slug": "ven-chartrons", "ts": "2017-09-29 19:57:09", "titre": "Vendredi 29 septembre 2017 · 19 h 57", "fichier": "X77 Bordeaux 2017 - 2017-09-29 19h57 - DSC_5080.jpg"}, {"id": "DSC_5084", "slug": "ven-chartrons", "ts": "2017-09-29 20:02:20", "titre": "Vendredi 29 septembre 2017 · 20 h 02", "fichier": "X77 Bordeaux 2017 - 2017-09-29 20h02 - DSC_5084.jpg"}, {"id": "DSC_5088", "slug": "ven-chartrons", "ts": "2017-09-29 20:07:20", "titre": "Vendredi 29 septembre 2017 · 20 h 07", "fichier": "X77 Bordeaux 2017 - 2017-09-29 20h07 - DSC_5088.jpg"}, {"id": "DSC_5096", "slug": "ven-chartrons", "ts": "2017-09-29 20:24:27", "titre": "Vendredi 29 septembre 2017 · 20 h 24", "fichier": "X77 Bordeaux 2017 - 2017-09-29 20h24 - DSC_5096.jpg"}, {"id": "DSC_5097-Panorama", "slug": "ven-chartrons", "ts": "2017-09-29 20:24:55", "titre": "Vendredi 29 septembre 2017 · 20 h 24", "fichier": "X77 Bordeaux 2017 - 2017-09-29 20h24 - DSC_5097-Panorama.jpg"}, {"id": "DSC_5101", "slug": "ven-chartrons", "ts": "2017-09-29 20:25:22", "titre": "Vendredi 29 septembre 2017 · 20 h 25", "fichier": "X77 Bordeaux 2017 - 2017-09-29 20h25 - DSC_5101.jpg"}, {"id": "DSC_5105", "slug": "ven-chartrons", "ts": "2017-09-29 20:30:31", "titre": "Vendredi 29 septembre 2017 · 20 h 30", "fichier": "X77 Bordeaux 2017 - 2017-09-29 20h30 - DSC_5105.jpg"}, {"id": "DSC_5108", "slug": "ven-chartrons", "ts": "2017-09-29 20:34:20", "titre": "Vendredi 29 septembre 2017 · 20 h 34", "fichier": "X77 Bordeaux 2017 - 2017-09-29 20h34 - DSC_5108.jpg"}, {"id": "DSC_5109", "slug": "ven-chartrons", "ts": "2017-09-29 20:37:41", "titre": "Vendredi 29 septembre 2017 · 20 h 37", "fichier": "X77 Bordeaux 2017 - 2017-09-29 20h37 - DSC_5109.jpg"}, {"id": "DSC_5120", "slug": "sam-figeac", "ts": "2017-09-30 10:52:11", "titre": "Samedi 30 septembre 2017 · 10 h 52", "fichier": "X77 Bordeaux 2017 - 2017-09-30 10h52 - DSC_5120.jpg"}, {"id": "DSC_5121", "slug": "sam-figeac", "ts": "2017-09-30 10:52:39", "titre": "Samedi 30 septembre 2017 · 10 h 52", "fichier": "X77 Bordeaux 2017 - 2017-09-30 10h52 - DSC_5121.jpg"}, {"id": "DSC_5122", "slug": "sam-figeac", "ts": "2017-09-30 10:53:44", "titre": "Samedi 30 septembre 2017 · 10 h 53", "fichier": "X77 Bordeaux 2017 - 2017-09-30 10h53 - DSC_5122.jpg"}, {"id": "DSC_5125", "slug": "sam-figeac", "ts": "2017-09-30 10:55:55", "titre": "Samedi 30 septembre 2017 · 10 h 55", "fichier": "X77 Bordeaux 2017 - 2017-09-30 10h55 - DSC_5125.jpg"}, {"id": "DSC_5128", "slug": "sam-figeac", "ts": "2017-09-30 11:17:36", "titre": "Samedi 30 septembre 2017 · 11 h 17", "fichier": "X77 Bordeaux 2017 - 2017-09-30 11h17 - DSC_5128.jpg"}, {"id": "DSC_5129", "slug": "sam-figeac", "ts": "2017-09-30 11:18:05", "titre": "Samedi 30 septembre 2017 · 11 h 18", "fichier": "X77 Bordeaux 2017 - 2017-09-30 11h18 - DSC_5129.jpg"}, {"id": "DSC_5131", "slug": "sam-figeac", "ts": "2017-09-30 11:19:11", "titre": "Samedi 30 septembre 2017 · 11 h 19", "fichier": "X77 Bordeaux 2017 - 2017-09-30 11h19 - DSC_5131.jpg"}, {"id": "DSC_5132", "slug": "sam-figeac", "ts": "2017-09-30 11:19:31", "titre": "Samedi 30 septembre 2017 · 11 h 19", "fichier": "X77 Bordeaux 2017 - 2017-09-30 11h19 - DSC_5132.jpg"}, {"id": "DSC_5134", "slug": "sam-figeac", "ts": "2017-09-30 11:22:56", "titre": "Samedi 30 septembre 2017 · 11 h 22", "fichier": "X77 Bordeaux 2017 - 2017-09-30 11h22 - DSC_5134.jpg"}, {"id": "DSC_5135", "slug": "sam-figeac", "ts": "2017-09-30 11:23:37", "titre": "Samedi 30 septembre 2017 · 11 h 23", "fichier": "X77 Bordeaux 2017 - 2017-09-30 11h23 - DSC_5135.jpg"}, {"id": "DSC_5137", "slug": "sam-figeac", "ts": "2017-09-30 11:25:12", "titre": "Samedi 30 septembre 2017 · 11 h 25", "fichier": "X77 Bordeaux 2017 - 2017-09-30 11h25 - DSC_5137.jpg"}, {"id": "DSC_5144", "slug": "sam-figeac", "ts": "2017-09-30 11:33:38", "titre": "Samedi 30 septembre 2017 · 11 h 33", "fichier": "X77 Bordeaux 2017 - 2017-09-30 11h33 - DSC_5144.jpg"}, {"id": "DSC_5148", "slug": "sam-figeac", "ts": "2017-09-30 11:37:06", "titre": "Samedi 30 septembre 2017 · 11 h 37", "fichier": "X77 Bordeaux 2017 - 2017-09-30 11h37 - DSC_5148.jpg"}, {"id": "DSC_5151", "slug": "sam-figeac", "ts": "2017-09-30 11:39:37", "titre": "Samedi 30 septembre 2017 · 11 h 39", "fichier": "X77 Bordeaux 2017 - 2017-09-30 11h39 - DSC_5151.jpg"}, {"id": "DSC_5156", "slug": "sam-figeac", "ts": "2017-09-30 11:44:03", "titre": "Samedi 30 septembre 2017 · 11 h 44", "fichier": "X77 Bordeaux 2017 - 2017-09-30 11h44 - DSC_5156.jpg"}, {"id": "DSC_5157", "slug": "sam-figeac", "ts": "2017-09-30 11:45:24", "titre": "Samedi 30 septembre 2017 · 11 h 45", "fichier": "X77 Bordeaux 2017 - 2017-09-30 11h45 - DSC_5157.jpg"}, {"id": "DSC_5159", "slug": "sam-figeac", "ts": "2017-09-30 11:48:03", "titre": "Samedi 30 septembre 2017 · 11 h 48", "fichier": "X77 Bordeaux 2017 - 2017-09-30 11h48 - DSC_5159.jpg"}, {"id": "DSC_5165", "slug": "sam-figeac", "ts": "2017-09-30 11:57:50", "titre": "Samedi 30 septembre 2017 · 11 h 57", "fichier": "X77 Bordeaux 2017 - 2017-09-30 11h57 - DSC_5165.jpg"}, {"id": "DSC_5166", "slug": "sam-figeac", "ts": "2017-09-30 11:58:06", "titre": "Samedi 30 septembre 2017 · 11 h 58", "fichier": "X77 Bordeaux 2017 - 2017-09-30 11h58 - DSC_5166.jpg"}, {"id": "DSC_5167", "slug": "sam-figeac", "ts": "2017-09-30 11:59:21", "titre": "Samedi 30 septembre 2017 · 11 h 59", "fichier": "X77 Bordeaux 2017 - 2017-09-30 11h59 - DSC_5167.jpg"}, {"id": "DSC_5171", "slug": "sam-figeac", "ts": "2017-09-30 12:01:15", "titre": "Samedi 30 septembre 2017 · 12 h 01", "fichier": "X77 Bordeaux 2017 - 2017-09-30 12h01 - DSC_5171.jpg"}, {"id": "DSC_5172", "slug": "sam-figeac", "ts": "2017-09-30 12:04:40", "titre": "Samedi 30 septembre 2017 · 12 h 04", "fichier": "X77 Bordeaux 2017 - 2017-09-30 12h04 - DSC_5172.jpg"}, {"id": "DSC_5175", "slug": "sam-figeac", "ts": "2017-09-30 12:12:18", "titre": "Samedi 30 septembre 2017 · 12 h 12", "fichier": "X77 Bordeaux 2017 - 2017-09-30 12h12 - DSC_5175.jpg"}, {"id": "IMG_5720", "slug": "sam-siaurac", "ts": "2017-09-30 12:25:32", "titre": "Samedi 30 septembre 2017 · 12 h 25", "fichier": "X77 Bordeaux 2017 - 2017-09-30 12h25 - IMG_5720.jpg"}, {"id": "DSC_5184", "slug": "sam-siaurac", "ts": "2017-09-30 12:40:13", "titre": "Samedi 30 septembre 2017 · 12 h 40", "fichier": "X77 Bordeaux 2017 - 2017-09-30 12h40 - DSC_5184.jpg"}, {"id": "DSC_5186", "slug": "sam-siaurac", "ts": "2017-09-30 12:41:26", "titre": "Samedi 30 septembre 2017 · 12 h 41", "fichier": "X77 Bordeaux 2017 - 2017-09-30 12h41 - DSC_5186.jpg"}, {"id": "DSC_5195", "slug": "sam-siaurac", "ts": "2017-09-30 12:48:17", "titre": "Samedi 30 septembre 2017 · 12 h 48", "fichier": "X77 Bordeaux 2017 - 2017-09-30 12h48 - DSC_5195.jpg"}, {"id": "DSC_5199", "slug": "sam-siaurac", "ts": "2017-09-30 12:56:53", "titre": "Samedi 30 septembre 2017 · 12 h 56", "fichier": "X77 Bordeaux 2017 - 2017-09-30 12h56 - DSC_5199.jpg"}, {"id": "DSC_5201", "slug": "sam-siaurac", "ts": "2017-09-30 12:59:44", "titre": "Samedi 30 septembre 2017 · 12 h 59", "fichier": "X77 Bordeaux 2017 - 2017-09-30 12h59 - DSC_5201.jpg"}, {"id": "DSC_5202", "slug": "sam-siaurac", "ts": "2017-09-30 13:01:27", "titre": "Samedi 30 septembre 2017 · 13 h 01", "fichier": "X77 Bordeaux 2017 - 2017-09-30 13h01 - DSC_5202.jpg"}, {"id": "DSC_5205", "slug": "sam-siaurac", "ts": "2017-09-30 13:05:30", "titre": "Samedi 30 septembre 2017 · 13 h 05", "fichier": "X77 Bordeaux 2017 - 2017-09-30 13h05 - DSC_5205.jpg"}, {"id": "DSC_5207", "slug": "sam-siaurac", "ts": "2017-09-30 13:06:19", "titre": "Samedi 30 septembre 2017 · 13 h 06", "fichier": "X77 Bordeaux 2017 - 2017-09-30 13h06 - DSC_5207.jpg"}, {"id": "DSC_5210", "slug": "sam-siaurac", "ts": "2017-09-30 13:08:00", "titre": "Samedi 30 septembre 2017 · 13 h 08", "fichier": "X77 Bordeaux 2017 - 2017-09-30 13h08 - DSC_5210.jpg"}, {"id": "DSC_5214", "slug": "sam-siaurac", "ts": "2017-09-30 13:11:50", "titre": "Samedi 30 septembre 2017 · 13 h 11", "fichier": "X77 Bordeaux 2017 - 2017-09-30 13h11 - DSC_5214.jpg"}, {"id": "IMG_5721", "slug": "sam-siaurac", "ts": "2017-09-30 13:26:14", "titre": "Samedi 30 septembre 2017 · 13 h 26", "fichier": "X77 Bordeaux 2017 - 2017-09-30 13h26 - IMG_5721.jpg"}, {"id": "IMG_5722", "slug": "sam-siaurac", "ts": "2017-09-30 13:26:21", "titre": "Samedi 30 septembre 2017 · 13 h 26", "fichier": "X77 Bordeaux 2017 - 2017-09-30 13h26 - IMG_5722.jpg"}, {"id": "DSC_5222", "slug": "sam-siaurac", "ts": "2017-09-30 13:30:46", "titre": "Samedi 30 septembre 2017 · 13 h 30", "fichier": "X77 Bordeaux 2017 - 2017-09-30 13h30 - DSC_5222.jpg"}, {"id": "DSC_5225", "slug": "sam-siaurac", "ts": "2017-09-30 13:31:15", "titre": "Samedi 30 septembre 2017 · 13 h 31", "fichier": "X77 Bordeaux 2017 - 2017-09-30 13h31 - DSC_5225.jpg"}, {"id": "DSC_5227", "slug": "sam-siaurac", "ts": "2017-09-30 13:31:31", "titre": "Samedi 30 septembre 2017 · 13 h 31", "fichier": "X77 Bordeaux 2017 - 2017-09-30 13h31 - DSC_5227.jpg"}, {"id": "DSC_5230", "slug": "sam-siaurac", "ts": "2017-09-30 13:32:34", "titre": "Samedi 30 septembre 2017 · 13 h 32", "fichier": "X77 Bordeaux 2017 - 2017-09-30 13h32 - DSC_5230.jpg"}, {"id": "DSC_5233", "slug": "sam-siaurac", "ts": "2017-09-30 13:38:36", "titre": "Samedi 30 septembre 2017 · 13 h 38", "fichier": "X77 Bordeaux 2017 - 2017-09-30 13h38 - DSC_5233.jpg"}, {"id": "DSC_5235", "slug": "sam-siaurac", "ts": "2017-09-30 13:39:22", "titre": "Samedi 30 septembre 2017 · 13 h 39", "fichier": "X77 Bordeaux 2017 - 2017-09-30 13h39 - DSC_5235.jpg"}, {"id": "IMG_5724", "slug": "sam-st-emilion", "ts": "2017-09-30 15:10:54", "titre": "Samedi 30 septembre 2017 · 15 h 10", "fichier": "X77 Bordeaux 2017 - 2017-09-30 15h10 - IMG_5724.jpg"}, {"id": "DSC_5243", "slug": "sam-st-emilion", "ts": "2017-09-30 16:09:04", "titre": "Samedi 30 septembre 2017 · 16 h 09", "fichier": "X77 Bordeaux 2017 - 2017-09-30 16h09 - DSC_5243.jpg"}, {"id": "DSC_5247", "slug": "sam-st-emilion", "ts": "2017-09-30 16:10:28", "titre": "Samedi 30 septembre 2017 · 16 h 10", "fichier": "X77 Bordeaux 2017 - 2017-09-30 16h10 - DSC_5247.jpg"}, {"id": "DSC_5249", "slug": "sam-st-emilion", "ts": "2017-09-30 16:13:31", "titre": "Samedi 30 septembre 2017 · 16 h 13", "fichier": "X77 Bordeaux 2017 - 2017-09-30 16h13 - DSC_5249.jpg"}, {"id": "DSC_5250", "slug": "sam-st-emilion", "ts": "2017-09-30 16:16:05", "titre": "Samedi 30 septembre 2017 · 16 h 16", "fichier": "X77 Bordeaux 2017 - 2017-09-30 16h16 - DSC_5250.jpg"}, {"id": "DSC_5253-Panorama", "slug": "sam-st-emilion", "ts": "2017-09-30 16:17:37", "titre": "Samedi 30 septembre 2017 · 16 h 17", "fichier": "X77 Bordeaux 2017 - 2017-09-30 16h17 - DSC_5253-Panorama.jpg"}, {"id": "DSC_5256", "slug": "sam-st-emilion", "ts": "2017-09-30 16:18:01", "titre": "Samedi 30 septembre 2017 · 16 h 18", "fichier": "X77 Bordeaux 2017 - 2017-09-30 16h18 - DSC_5256.jpg"}, {"id": "DSC_5257", "slug": "sam-st-emilion", "ts": "2017-09-30 16:19:23", "titre": "Samedi 30 septembre 2017 · 16 h 19", "fichier": "X77 Bordeaux 2017 - 2017-09-30 16h19 - DSC_5257.jpg"}, {"id": "DSC_5263", "slug": "sam-st-emilion", "ts": "2017-09-30 16:25:03", "titre": "Samedi 30 septembre 2017 · 16 h 25", "fichier": "X77 Bordeaux 2017 - 2017-09-30 16h25 - DSC_5263.jpg"}, {"id": "DSC_5266", "slug": "sam-st-emilion", "ts": "2017-09-30 16:26:00", "titre": "Samedi 30 septembre 2017 · 16 h 26", "fichier": "X77 Bordeaux 2017 - 2017-09-30 16h26 - DSC_5266.jpg"}, {"id": "DSC_5270", "slug": "sam-st-emilion", "ts": "2017-09-30 16:28:44", "titre": "Samedi 30 septembre 2017 · 16 h 28", "fichier": "X77 Bordeaux 2017 - 2017-09-30 16h28 - DSC_5270.jpg"}, {"id": "DSC_5272", "slug": "sam-st-emilion", "ts": "2017-09-30 16:30:51", "titre": "Samedi 30 septembre 2017 · 16 h 30", "fichier": "X77 Bordeaux 2017 - 2017-09-30 16h30 - DSC_5272.jpg"}, {"id": "DSC_5275", "slug": "sam-st-emilion", "ts": "2017-09-30 16:31:57", "titre": "Samedi 30 septembre 2017 · 16 h 31", "fichier": "X77 Bordeaux 2017 - 2017-09-30 16h31 - DSC_5275.jpg"}, {"id": "DSC_5276", "slug": "sam-st-emilion", "ts": "2017-09-30 16:32:38", "titre": "Samedi 30 septembre 2017 · 16 h 32", "fichier": "X77 Bordeaux 2017 - 2017-09-30 16h32 - DSC_5276.jpg"}, {"id": "DSC_5280", "slug": "sam-st-emilion", "ts": "2017-09-30 16:34:31", "titre": "Samedi 30 septembre 2017 · 16 h 34", "fichier": "X77 Bordeaux 2017 - 2017-09-30 16h34 - DSC_5280.jpg"}, {"id": "DSC_5281", "slug": "sam-st-emilion", "ts": "2017-09-30 16:35:22", "titre": "Samedi 30 septembre 2017 · 16 h 35", "fichier": "X77 Bordeaux 2017 - 2017-09-30 16h35 - DSC_5281.jpg"}, {"id": "DSC_5283", "slug": "sam-st-emilion", "ts": "2017-09-30 16:36:30", "titre": "Samedi 30 septembre 2017 · 16 h 36", "fichier": "X77 Bordeaux 2017 - 2017-09-30 16h36 - DSC_5283.jpg"}, {"id": "DSC_5285", "slug": "sam-st-emilion", "ts": "2017-09-30 16:37:10", "titre": "Samedi 30 septembre 2017 · 16 h 37", "fichier": "X77 Bordeaux 2017 - 2017-09-30 16h37 - DSC_5285.jpg"}, {"id": "DSC_5286", "slug": "sam-st-emilion", "ts": "2017-09-30 16:37:54", "titre": "Samedi 30 septembre 2017 · 16 h 37", "fichier": "X77 Bordeaux 2017 - 2017-09-30 16h37 - DSC_5286.jpg"}, {"id": "DSC_5287", "slug": "sam-st-emilion", "ts": "2017-09-30 16:38:50", "titre": "Samedi 30 septembre 2017 · 16 h 38", "fichier": "X77 Bordeaux 2017 - 2017-09-30 16h38 - DSC_5287.jpg"}, {"id": "DSC_5289", "slug": "sam-st-emilion", "ts": "2017-09-30 16:39:17", "titre": "Samedi 30 septembre 2017 · 16 h 39", "fichier": "X77 Bordeaux 2017 - 2017-09-30 16h39 - DSC_5289.jpg"}, {"id": "DSC_5292", "slug": "sam-st-emilion", "ts": "2017-09-30 16:40:33", "titre": "Samedi 30 septembre 2017 · 16 h 40", "fichier": "X77 Bordeaux 2017 - 2017-09-30 16h40 - DSC_5292.jpg"}, {"id": "IMG_5725", "slug": "sam-st-emilion", "ts": "2017-09-30 16:41:20", "titre": "Samedi 30 septembre 2017 · 16 h 41", "fichier": "X77 Bordeaux 2017 - 2017-09-30 16h41 - IMG_5725.jpg"}, {"id": "DSC_5304", "slug": "sam-st-emilion", "ts": "2017-09-30 16:44:36", "titre": "Samedi 30 septembre 2017 · 16 h 44", "fichier": "X77 Bordeaux 2017 - 2017-09-30 16h44 - DSC_5304.jpg"}, {"id": "DSC_5311", "slug": "sam-st-emilion", "ts": "2017-09-30 16:49:31", "titre": "Samedi 30 septembre 2017 · 16 h 49", "fichier": "X77 Bordeaux 2017 - 2017-09-30 16h49 - DSC_5311.jpg"}, {"id": "DSC_5313", "slug": "sam-st-emilion", "ts": "2017-09-30 16:54:14", "titre": "Samedi 30 septembre 2017 · 16 h 54", "fichier": "X77 Bordeaux 2017 - 2017-09-30 16h54 - DSC_5313.jpg"}, {"id": "IMG_5726", "slug": "sam-st-emilion", "ts": "2017-09-30 17:05:48", "titre": "Samedi 30 septembre 2017 · 17 h 05", "fichier": "X77 Bordeaux 2017 - 2017-09-30 17h05 - IMG_5726.jpg"}, {"id": "DSC_5314", "slug": "sam-retour", "ts": "2017-09-30 17:42:21", "titre": "Samedi 30 septembre 2017 · 17 h 42", "fichier": "X77 Bordeaux 2017 - 2017-09-30 17h42 - DSC_5314.jpg"}, {"id": "IMG_5727", "slug": "sam-retour", "ts": "2017-09-30 18:55:41", "titre": "Samedi 30 septembre 2017 · 18 h 55", "fichier": "X77 Bordeaux 2017 - 2017-09-30 18h55 - IMG_5727.jpg"}, {"id": "DSC_5318", "slug": "sam-cite-du-vin", "ts": "2017-09-30 19:32:49", "titre": "Samedi 30 septembre 2017 · 19 h 32", "fichier": "X77 Bordeaux 2017 - 2017-09-30 19h32 - DSC_5318.jpg"}, {"id": "DSC_5320", "slug": "sam-cite-du-vin", "ts": "2017-09-30 19:37:38", "titre": "Samedi 30 septembre 2017 · 19 h 37", "fichier": "X77 Bordeaux 2017 - 2017-09-30 19h37 - DSC_5320.jpg"}, {"id": "DSC_5321", "slug": "sam-cite-du-vin", "ts": "2017-09-30 19:38:31", "titre": "Samedi 30 septembre 2017 · 19 h 38", "fichier": "X77 Bordeaux 2017 - 2017-09-30 19h38 - DSC_5321.jpg"}, {"id": "DSC_5322", "slug": "sam-cite-du-vin", "ts": "2017-09-30 19:40:16", "titre": "Samedi 30 septembre 2017 · 19 h 40", "fichier": "X77 Bordeaux 2017 - 2017-09-30 19h40 - DSC_5322.jpg"}, {"id": "DSC_5323", "slug": "sam-cite-du-vin", "ts": "2017-09-30 19:40:24", "titre": "Samedi 30 septembre 2017 · 19 h 40", "fichier": "X77 Bordeaux 2017 - 2017-09-30 19h40 - DSC_5323.jpg"}, {"id": "DSC_5324", "slug": "sam-cite-du-vin", "ts": "2017-09-30 19:41:48", "titre": "Samedi 30 septembre 2017 · 19 h 41", "fichier": "X77 Bordeaux 2017 - 2017-09-30 19h41 - DSC_5324.jpg"}, {"id": "DSC_5327", "slug": "sam-cite-du-vin", "ts": "2017-09-30 19:44:12", "titre": "Samedi 30 septembre 2017 · 19 h 44", "fichier": "X77 Bordeaux 2017 - 2017-09-30 19h44 - DSC_5327.jpg"}, {"id": "DSC_5331", "slug": "sam-cite-du-vin", "ts": "2017-09-30 20:19:33", "titre": "Samedi 30 septembre 2017 · 20 h 19", "fichier": "X77 Bordeaux 2017 - 2017-09-30 20h19 - DSC_5331.jpg"}, {"id": "DSC_5333", "slug": "sam-cite-du-vin", "ts": "2017-09-30 21:22:48", "titre": "Samedi 30 septembre 2017 · 21 h 22", "fichier": "X77 Bordeaux 2017 - 2017-09-30 21h22 - DSC_5333.jpg"}, {"id": "DSC_5338-Panorama", "slug": "dim-vieux-bordeaux", "ts": "2017-10-01 10:21:59", "titre": "Dimanche 1er octobre 2017 · 10 h 21", "fichier": "X77 Bordeaux 2017 - 2017-10-01 10h21 - DSC_5338-Panorama.jpg"}, {"id": "DSC_5341", "slug": "dim-vieux-bordeaux", "ts": "2017-10-01 10:22:47", "titre": "Dimanche 1er octobre 2017 · 10 h 22", "fichier": "X77 Bordeaux 2017 - 2017-10-01 10h22 - DSC_5341.jpg"}, {"id": "DSC_5344", "slug": "dim-vieux-bordeaux", "ts": "2017-10-01 10:24:20", "titre": "Dimanche 1er octobre 2017 · 10 h 24", "fichier": "X77 Bordeaux 2017 - 2017-10-01 10h24 - DSC_5344.jpg"}, {"id": "DSC_5345", "slug": "dim-vieux-bordeaux", "ts": "2017-10-01 10:25:28", "titre": "Dimanche 1er octobre 2017 · 10 h 25", "fichier": "X77 Bordeaux 2017 - 2017-10-01 10h25 - DSC_5345.jpg"}, {"id": "DSC_5346", "slug": "dim-vieux-bordeaux", "ts": "2017-10-01 10:28:18", "titre": "Dimanche 1er octobre 2017 · 10 h 28", "fichier": "X77 Bordeaux 2017 - 2017-10-01 10h28 - DSC_5346.jpg"}, {"id": "DSC_5348", "slug": "dim-vieux-bordeaux", "ts": "2017-10-01 10:29:14", "titre": "Dimanche 1er octobre 2017 · 10 h 29", "fichier": "X77 Bordeaux 2017 - 2017-10-01 10h29 - DSC_5348.jpg"}, {"id": "DSC_5351", "slug": "dim-vieux-bordeaux", "ts": "2017-10-01 10:31:54", "titre": "Dimanche 1er octobre 2017 · 10 h 31", "fichier": "X77 Bordeaux 2017 - 2017-10-01 10h31 - DSC_5351.jpg"}, {"id": "DSC_5353", "slug": "dim-vieux-bordeaux", "ts": "2017-10-01 10:37:00", "titre": "Dimanche 1er octobre 2017 · 10 h 37", "fichier": "X77 Bordeaux 2017 - 2017-10-01 10h37 - DSC_5353.jpg"}, {"id": "DSC_5354", "slug": "dim-vieux-bordeaux", "ts": "2017-10-01 10:37:20", "titre": "Dimanche 1er octobre 2017 · 10 h 37", "fichier": "X77 Bordeaux 2017 - 2017-10-01 10h37 - DSC_5354.jpg"}, {"id": "DSC_5356", "slug": "dim-vieux-bordeaux", "ts": "2017-10-01 10:38:44", "titre": "Dimanche 1er octobre 2017 · 10 h 38", "fichier": "X77 Bordeaux 2017 - 2017-10-01 10h38 - DSC_5356.jpg"}, {"id": "DSC_5360", "slug": "dim-vieux-bordeaux", "ts": "2017-10-01 10:44:41", "titre": "Dimanche 1er octobre 2017 · 10 h 44", "fichier": "X77 Bordeaux 2017 - 2017-10-01 10h44 - DSC_5360.jpg"}, {"id": "DSC_5369", "slug": "dim-vieux-bordeaux", "ts": "2017-10-01 10:47:13", "titre": "Dimanche 1er octobre 2017 · 10 h 47", "fichier": "X77 Bordeaux 2017 - 2017-10-01 10h47 - DSC_5369.jpg"}, {"id": "DSC_5371", "slug": "dim-vieux-bordeaux", "ts": "2017-10-01 10:53:27", "titre": "Dimanche 1er octobre 2017 · 10 h 53", "fichier": "X77 Bordeaux 2017 - 2017-10-01 10h53 - DSC_5371.jpg"}, {"id": "DSC_5372", "slug": "dim-vieux-bordeaux", "ts": "2017-10-01 10:56:35", "titre": "Dimanche 1er octobre 2017 · 10 h 56", "fichier": "X77 Bordeaux 2017 - 2017-10-01 10h56 - DSC_5372.jpg"}, {"id": "DSC_5374", "slug": "dim-vieux-bordeaux", "ts": "2017-10-01 10:57:42", "titre": "Dimanche 1er octobre 2017 · 10 h 57", "fichier": "X77 Bordeaux 2017 - 2017-10-01 10h57 - DSC_5374.jpg"}, {"id": "DSC_5375", "slug": "dim-vieux-bordeaux", "ts": "2017-10-01 10:59:02", "titre": "Dimanche 1er octobre 2017 · 10 h 59", "fichier": "X77 Bordeaux 2017 - 2017-10-01 10h59 - DSC_5375.jpg"}, {"id": "DSC_5377", "slug": "dim-vieux-bordeaux", "ts": "2017-10-01 11:00:12", "titre": "Dimanche 1er octobre 2017 · 11 h 00", "fichier": "X77 Bordeaux 2017 - 2017-10-01 11h00 - DSC_5377.jpg"}, {"id": "DSC_5384", "slug": "dim-vieux-bordeaux", "ts": "2017-10-01 11:08:38", "titre": "Dimanche 1er octobre 2017 · 11 h 08", "fichier": "X77 Bordeaux 2017 - 2017-10-01 11h08 - DSC_5384.jpg"}, {"id": "DSC_5387", "slug": "dim-vieux-bordeaux", "ts": "2017-10-01 11:13:30", "titre": "Dimanche 1er octobre 2017 · 11 h 13", "fichier": "X77 Bordeaux 2017 - 2017-10-01 11h13 - DSC_5387.jpg"}, {"id": "DSC_5388", "slug": "dim-vieux-bordeaux", "ts": "2017-10-01 11:15:46", "titre": "Dimanche 1er octobre 2017 · 11 h 15", "fichier": "X77 Bordeaux 2017 - 2017-10-01 11h15 - DSC_5388.jpg"}, {"id": "DSC_5389", "slug": "dim-vieux-bordeaux", "ts": "2017-10-01 11:22:32", "titre": "Dimanche 1er octobre 2017 · 11 h 22", "fichier": "X77 Bordeaux 2017 - 2017-10-01 11h22 - DSC_5389.jpg"}, {"id": "DSC_5391", "slug": "dim-vieux-bordeaux", "ts": "2017-10-01 11:29:53", "titre": "Dimanche 1er octobre 2017 · 11 h 29", "fichier": "X77 Bordeaux 2017 - 2017-10-01 11h29 - DSC_5391.jpg"}, {"id": "DSC_5393", "slug": "dim-vieux-bordeaux", "ts": "2017-10-01 11:58:52", "titre": "Dimanche 1er octobre 2017 · 11 h 58", "fichier": "X77 Bordeaux 2017 - 2017-10-01 11h58 - DSC_5393.jpg"}, {"id": "DSC_5406", "slug": "dim-vieux-bordeaux", "ts": "2017-10-01 12:13:51", "titre": "Dimanche 1er octobre 2017 · 12 h 13", "fichier": "X77 Bordeaux 2017 - 2017-10-01 12h13 - DSC_5406.jpg"}, {"id": "DSC_5407", "slug": "dim-cafe-du-port", "ts": "2017-10-01 12:34:27", "titre": "Dimanche 1er octobre 2017 · 12 h 34", "fichier": "X77 Bordeaux 2017 - 2017-10-01 12h34 - DSC_5407.jpg"}, {"id": "DSC_5409", "slug": "dim-cafe-du-port", "ts": "2017-10-01 12:36:31", "titre": "Dimanche 1er octobre 2017 · 12 h 36", "fichier": "X77 Bordeaux 2017 - 2017-10-01 12h36 - DSC_5409.jpg"}, {"id": "DSC_5410", "slug": "dim-cafe-du-port", "ts": "2017-10-01 12:39:15", "titre": "Dimanche 1er octobre 2017 · 12 h 39", "fichier": "X77 Bordeaux 2017 - 2017-10-01 12h39 - DSC_5410.jpg"}, {"id": "DSC_5413", "slug": "dim-cafe-du-port", "ts": "2017-10-01 12:41:01", "titre": "Dimanche 1er octobre 2017 · 12 h 41", "fichier": "X77 Bordeaux 2017 - 2017-10-01 12h41 - DSC_5413.jpg"}, {"id": "DSC_5414", "slug": "dim-cafe-du-port", "ts": "2017-10-01 12:42:36", "titre": "Dimanche 1er octobre 2017 · 12 h 42", "fichier": "X77 Bordeaux 2017 - 2017-10-01 12h42 - DSC_5414.jpg"}, {"id": "DSC_5415", "slug": "dim-cafe-du-port", "ts": "2017-10-01 12:44:22", "titre": "Dimanche 1er octobre 2017 · 12 h 44", "fichier": "X77 Bordeaux 2017 - 2017-10-01 12h44 - DSC_5415.jpg"}, {"id": "DSC_5416", "slug": "dim-cafe-du-port", "ts": "2017-10-01 12:45:32", "titre": "Dimanche 1er octobre 2017 · 12 h 45", "fichier": "X77 Bordeaux 2017 - 2017-10-01 12h45 - DSC_5416.jpg"}, {"id": "DSC_5417", "slug": "dim-cafe-du-port", "ts": "2017-10-01 12:46:30", "titre": "Dimanche 1er octobre 2017 · 12 h 46", "fichier": "X77 Bordeaux 2017 - 2017-10-01 12h46 - DSC_5417.jpg"}, {"id": "DSC_5423", "slug": "dim-cafe-du-port", "ts": "2017-10-01 14:27:57", "titre": "Dimanche 1er octobre 2017 · 14 h 27", "fichier": "X77 Bordeaux 2017 - 2017-10-01 14h27 - DSC_5423.jpg"}];
+const ORDRE = [{"slug": "ven-mairie", "jour": "Vendredi 29 septembre", "label": "Réception à l’hôtel de ville"}, {"slug": "ven-chartrons", "jour": "Vendredi 29 septembre", "label": "Vers les Chartrons, dîner chez Ibaïa"}, {"slug": "sam-figeac", "jour": "Samedi 30 septembre", "label": "Château Figeac"}, {"slug": "sam-siaurac", "jour": "Samedi 30 septembre", "label": "Château Siaurac et déjeuner dans le parc"}, {"slug": "sam-st-emilion", "jour": "Samedi 30 septembre", "label": "Saint-Émilion"}, {"slug": "sam-retour", "jour": "Samedi 30 septembre", "label": "Retour à Bordeaux"}, {"slug": "sam-cite-du-vin", "jour": "Samedi 30 septembre", "label": "Soirée à la Cité du Vin"}, {"slug": "dim-vieux-bordeaux", "jour": "Dimanche 1er octobre", "label": "Visites du vieux Bordeaux"}, {"slug": "dim-cafe-du-port", "jour": "Dimanche 1er octobre", "label": "Vers la rive droite, déjeuner au Café du Port"}];
+
+const $ = id => document.getElementById(id);
+let courante = 'toutes';   // rubrique affichée
+let liste = [];            // photos de la vue courante
+let idx = -1;              // photo ouverte
+
+function nomFichier(p) { return p.fichier; }
+
+function menu() {
+  const nav = $('rubriques');
+  nav.innerHTML = '';
+  const bouton = (slug, label, n) => {
+    const b = document.createElement('button');
+    b.className = 'rubrique' + (slug === courante ? ' active' : '');
+    b.innerHTML = '<span></span><span class="n">' + n + '</span>';
+    b.firstChild.textContent = label;
+    b.onclick = () => { courante = slug; fermer(); afficher(); menu(); history.replaceState(null, '', '#' + slug); };
+    nav.appendChild(b);
+  };
+  bouton('toutes', 'Toutes les photos', PHOTOS.length);
+  let jour = null;
+  ORDRE.forEach(r => {
+    if (r.jour !== jour) { jour = r.jour; const h = document.createElement('div'); h.className = 'jour'; h.textContent = jour; nav.appendChild(h); }
+    bouton(r.slug, r.label, PHOTOS.filter(p => p.slug === r.slug).length);
+  });
+}
+
+function vignette(p) {
+  const b = document.createElement('button');
+  b.className = 'thumb' + (p.slug === 'trombi' ? ' portrait' : '');
+  b.title = p.titre;
+  const img = document.createElement('img');
+  img.loading = 'lazy'; img.src = 'photos/thumb/' + p.id + '.jpg'; img.alt = p.titre;
+  const c = document.createElement('div'); c.className = 'cap'; c.textContent = p.titre;
+  b.append(img, c);
+  const k = liste.length; liste.push(p);
+  b.onclick = () => ouvrir(k);
+  return b;
+}
+
+function afficher() {
+  const g = $('grille');
+  g.innerHTML = ''; liste = [];
+  const groupes = courante === 'toutes' ? ORDRE : ORDRE.filter(r => r.slug === courante);
+  const label = courante === 'toutes' ? 'Toutes les photos' : (groupes[0].slug === 'trombi' ? groupes[0].label : groupes[0].jour + ' · ' + groupes[0].label);
+  const n = courante === 'toutes' ? PHOTOS.length : PHOTOS.filter(p => p.slug === courante).length;
+  $('titre').innerHTML = ''; $('titre').append(label);
+  const sm = document.createElement('small'); sm.textContent = n + ' photo' + (n > 1 ? 's' : ''); $('titre').append(sm);
+  groupes.forEach(r => {
+    const ps = PHOTOS.filter(p => p.slug === r.slug);
+    if (!ps.length) return;
+    if (courante === 'toutes') { const h = document.createElement('div'); h.className = 'section-title'; h.textContent = r.slug === 'trombi' ? r.label : r.jour + ' · ' + r.label; g.appendChild(h); }
+    const grid = document.createElement('div'); grid.className = 'grid';
+    ps.forEach(p => grid.appendChild(vignette(p)));
+    g.appendChild(grid);
+  });
+  g.scrollTop = 0;
+}
+
+function ouvrir(k) {
+  idx = (k + liste.length) % liste.length;
+  const p = liste[idx];
+  $('vimg').src = 'photos/full/' + p.id + '.jpg';
+  $('vimg').alt = p.titre;
+  $('vtitle').innerHTML = '';
+  $('vtitle').classList.toggle('trombi', p.slug === 'trombi');
+  $('vtitle').append(p.titre);
+  const s = document.createElement('span'); s.textContent = (ORDRE.find(o => o.slug === p.slug) || {}).label + ' · ' + (idx + 1) + ' / ' + liste.length; $('vtitle').append(s);
+  $('dl').href = 'photos/full/' + p.id + '.jpg';
+  $('dl').setAttribute('download', nomFichier(p));
+  $('viewer').classList.add('open');
+  $('viewer').setAttribute('aria-hidden', 'false');
+  // précharge les voisines
+  [idx + 1, idx - 1].forEach(j => { const q = liste[(j + liste.length) % liste.length]; if (q) new Image().src = 'photos/full/' + q.id + '.jpg'; });
+}
+function fermer() { $('viewer').classList.remove('open'); $('viewer').setAttribute('aria-hidden', 'true'); idx = -1; }
+
+$('prec').onclick = () => ouvrir(idx - 1);
+$('suiv').onclick = () => ouvrir(idx + 1);
+$('fermer').onclick = fermer;
+$('vimg').onclick = () => ouvrir(idx + 1);
+document.addEventListener('keydown', e => {
+  if (idx < 0) return;
+  if (e.key === 'ArrowRight') ouvrir(idx + 1);
+  else if (e.key === 'ArrowLeft') ouvrir(idx - 1);
+  else if (e.key === 'Escape') fermer();
+});
+// balayage sur mobile
+let x0 = null;
+$('viewer').addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
+$('viewer').addEventListener('touchend', e => {
+  if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; x0 = null;
+  if (Math.abs(dx) > 50) ouvrir(idx + (dx < 0 ? 1 : -1));
+});
+
+// réglette de taille
+const r = $('taille');
+try { const v = localStorage.getItem('x77-bdx-taille'); if (v) r.value = v; } catch (e) {}
+const appliquer = () => document.documentElement.style.setProperty('--thumb', r.value + 'px');
+r.oninput = () => { appliquer(); try { localStorage.setItem('x77-bdx-taille', r.value); } catch (e) {} };
+appliquer();
+
+const h = location.hash.slice(1);
+if (ORDRE.some(o => o.slug === h)) courante = h;
+$('total').textContent = PHOTOS.length;
+menu(); afficher();
+</script>
+</body>
+</html>
