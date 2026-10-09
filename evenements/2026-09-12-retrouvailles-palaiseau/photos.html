@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Photos – Retrouvailles X77 à Palaiseau</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      --bg: #020617;
+      --panel: #0b1222;
+      --accent: #f97316;
+      --accent-soft: rgba(249, 115, 22, 0.18);
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --border-soft: rgba(148, 163, 184, 0.4);
+      --side: 270px;
+      --thumb: 220px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      background: radial-gradient(circle at top, #111827, var(--bg) 60%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      overflow: hidden;
+    }
+    .app { display: flex; height: 100vh; }
+
+    /* Colonne des rubriques */
+    aside {
+      flex: 0 0 var(--side);
+      width: var(--side);
+      border-right: 1px solid var(--border-soft);
+      background: rgba(2, 6, 23, 0.85);
+      display: flex;
+      flex-direction: column;
+      padding: 26px 18px 18px;
+      gap: 6px;
+      overflow-y: auto;
+      z-index: 20;
+    }
+    .brand { font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+    aside h1 { font-size: 1.35rem; line-height: 1.25; margin: 6px 0 4px; }
+    .sub { color: var(--text-muted); font-size: 0.88rem; margin-bottom: 18px; }
+    .rubrique {
+      display: flex; justify-content: space-between; align-items: center;
+      width: 100%; text-align: left;
+      background: transparent; color: var(--text-main);
+      border: 1px solid transparent; border-radius: 999px;
+      padding: 9px 14px; font: inherit; font-size: 0.95rem; cursor: pointer;
+      transition: background .15s, border-color .15s;
+    }
+    .rubrique:hover { background: rgba(148, 163, 184, 0.10); }
+    .rubrique.active { background: var(--accent-soft); border-color: var(--accent); }
+    .rubrique .n { color: var(--text-muted); font-size: 0.8rem; font-variant-numeric: tabular-nums; }
+    .rubrique.active .n { color: var(--accent); }
+    .sep { border-top: 1px solid rgba(148,163,184,0.2); margin: 8px 4px; }
+    .back {
+      margin-top: auto; padding-top: 18px;
+      color: var(--text-muted); font-size: 0.85rem; text-decoration: none;
+    }
+    .back:hover { color: var(--accent); }
+
+    /* Zone principale */
+    .main { flex: 1; display: flex; flex-direction: column; min-width: 0; position: relative; }
+    .toolbar {
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      padding: 20px 28px 14px; border-bottom: 1px solid rgba(148,163,184,0.18);
+    }
+    .toolbar h2 { font-size: 1.15rem; font-weight: 600; }
+    .toolbar h2 small { color: var(--text-muted); font-weight: 400; font-size: 0.9rem; margin-left: 8px; }
+    .zoom { display: flex; align-items: center; gap: 10px; color: var(--text-muted); font-size: 0.85rem; }
+    .zoom svg { width: 16px; height: 16px; fill: currentColor; }
+    input[type=range] { width: 170px; accent-color: var(--accent); cursor: pointer; }
+    .grid-wrap { flex: 1; overflow-y: auto; padding: 22px 28px 40px; }
+    .section-title {
+      color: var(--accent); font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase;
+      font-weight: 600; margin: 8px 0 12px;
+    }
+    .section-title:not(:first-child) { margin-top: 30px; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(var(--thumb), 1fr));
+      gap: 12px;
+    }
+    .thumb {
+      position: relative; aspect-ratio: 4 / 3; border-radius: 10px; overflow: hidden;
+      background: #0f172a; border: 1px solid rgba(148,163,184,0.25);
+      cursor: zoom-in; padding: 0;
+    }
+    .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .25s; }
+    .thumb:hover img { transform: scale(1.04); }
+    .thumb:hover, .thumb:focus-visible { border-color: var(--accent); outline: none; }
+    .thumb .cap {
+      position: absolute; left: 0; right: 0; bottom: 0;
+      padding: 18px 10px 7px; font-size: 0.8rem; text-align: left; color: #fff;
+      background: linear-gradient(transparent, rgba(0,0,0,0.75));
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+
+    /* Visionneuse : couvre tout sauf la colonne des rubriques */
+    .viewer {
+      position: fixed; top: 0; right: 0; bottom: 0; left: var(--side);
+      background: rgba(2, 6, 23, 0.97);
+      display: none; flex-direction: column; z-index: 10;
+    }
+    .viewer.open { display: flex; }
+    .vbar {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 14px 20px; border-bottom: 1px solid rgba(148,163,184,0.18);
+    }
+    .vtitle { font-size: 1rem; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .vtitle span { color: var(--text-muted); font-size: 0.85rem; margin-left: 10px; }
+    .vactions { display: flex; gap: 10px; flex-shrink: 0; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      border-radius: 999px; border: 1px solid var(--border-soft);
+      background: transparent; color: var(--text-main); text-decoration: none;
+      padding: 8px 15px; font: inherit; font-size: 0.88rem; cursor: pointer;
+      transition: border-color .15s, background .15s;
+    }
+    .btn:hover { border-color: var(--accent); background: var(--accent-soft); }
+    .btn.primary { background: var(--accent); border-color: var(--accent); color: #111827; font-weight: 600; }
+    .btn.primary:hover { filter: brightness(1.08); }
+    .btn svg { width: 15px; height: 15px; fill: currentColor; }
+    .stage { flex: 1; position: relative; display: flex; align-items: center; justify-content: center; min-height: 0; padding: 18px 70px; }
+    .stage img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 6px; box-shadow: 0 20px 50px -10px rgba(0,0,0,0.8); user-select: none; }
+    .nav {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 46px; height: 46px; border-radius: 50%;
+      border: 1px solid var(--border-soft); background: rgba(15,23,42,0.75); color: var(--text-main);
+      font-size: 1.5rem; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    }
+    .nav:hover { border-color: var(--accent); color: var(--accent); }
+    .nav.prev { left: 14px; } .nav.next { right: 14px; }
+    .hint { text-align: center; color: var(--text-muted); font-size: 0.78rem; padding: 0 0 12px; }
+
+    @media (max-width: 760px) {
+      :root { --side: 0px; }
+      body { overflow: auto; }
+      .app { flex-direction: column; height: auto; }
+      aside { flex: none; width: 100%; padding: 16px; border-right: 0; border-bottom: 1px solid var(--border-soft); }
+      .rubriques { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; }
+      .rubrique { width: auto; white-space: nowrap; gap: 8px; }
+      .sep, .back { display: none; }
+      .sub { margin-bottom: 10px; }
+      .grid-wrap { overflow: visible; padding: 16px; }
+      .toolbar { padding: 14px 16px; flex-wrap: wrap; }
+      input[type=range] { width: 120px; }
+      .stage { padding: 10px; }
+      .nav { width: 38px; height: 38px; }
+      .btn .lbl { display: none; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <aside>
+    <div class="brand">X77 · Événements</div>
+    <h1>Retrouvailles à Palaiseau</h1>
+    <div class="sub">Samedi 12 septembre 2026 · <span id="total"></span> photos</div>
+    <nav class="rubriques" id="rubriques"></nav>
+    <a class="back" href="index.html">← Retour à la page de l'événement</a>
+  </aside>
+
+  <section class="main">
+    <div class="toolbar">
+      <h2 id="titre"></h2>
+      <label class="zoom" title="Taille des vignettes">
+        <svg viewBox="0 0 24 24"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/></svg>
+        <input type="range" id="taille" min="120" max="520" step="10" value="220" aria-label="Taille des vignettes">
+        <svg viewBox="0 0 24 24" style="width:20px;height:20px"><path d="M3 3h18v18H3z"/></svg>
+      </label>
+    </div>
+    <div class="grid-wrap" id="grille"></div>
+  </section>
+</div>
+
+<div class="viewer" id="viewer" aria-hidden="true">
+  <div class="vbar">
+    <div class="vtitle" id="vtitle"></div>
+    <div class="vactions">
+      <a class="btn primary" id="dl" download>
+        <svg viewBox="0 0 24 24"><path d="M11 3h2v10.17l3.59-3.58L18 11l-6 6-6-6 1.41-1.41L11 13.17zM5 19h14v2H5z"/></svg>
+        <span class="lbl">Télécharger</span>
+      </a>
+      <button class="btn" id="fermer" title="Fermer (Échap)">
+        <svg viewBox="0 0 24 24"><path d="M18.3 5.71 12 12.01l-6.3-6.3-1.41 1.41 6.3 6.3-6.3 6.29 1.41 1.42 6.3-6.3 6.29 6.3 1.42-1.42-6.3-6.29 6.3-6.3z"/></svg>
+        <span class="lbl">Fermer</span>
+      </button>
+    </div>
+  </div>
+  <div class="stage">
+    <button class="nav prev" id="prec" aria-label="Photo précédente">‹</button>
+    <img id="vimg" alt="">
+    <button class="nav next" id="suiv" aria-label="Photo suivante">›</button>
+  </div>
+  <div class="hint">← → pour naviguer · Échap pour revenir aux vignettes</div>
+</div>
+
+<script>
+const PHOTOS = [{"id": "01", "slug": "amphi", "rubrique": "Amphi Présentation", "titre": "Arielle et Bruno"}, {"id": "02", "slug": "amphi", "rubrique": "Amphi Présentation", "titre": "Présentation DER"}, {"id": "03", "slug": "amphi", "rubrique": "Amphi Présentation", "titre": "Slide ouverture anniversaire"}, {"id": "04", "slug": "amphi", "rubrique": "Amphi Présentation", "titre": "Slide présentation AX"}, {"id": "05", "slug": "sirta", "rubrique": "SIRTA", "titre": "Présentation SIRTA ouverture"}, {"id": "06", "slug": "sirta", "rubrique": "SIRTA", "titre": "Présentation SIRTA"}, {"id": "07", "slug": "sirta", "rubrique": "SIRTA", "titre": "Présentation SIRTA (2)"}, {"id": "08", "slug": "sirta", "rubrique": "SIRTA", "titre": "Présentation SIRTA (3)"}, {"id": "09", "slug": "sirta", "rubrique": "SIRTA", "titre": "Présentation SIRTA (4)"}, {"id": "10", "slug": "sirta", "rubrique": "SIRTA", "titre": "Présentation SIRTA (4 bis)"}, {"id": "11", "slug": "sirta", "rubrique": "SIRTA", "titre": "Présentation SIRTA (5)"}, {"id": "12", "slug": "sirta", "rubrique": "SIRTA", "titre": "Présentation SIRTA (6)"}, {"id": "13", "slug": "sirta", "rubrique": "SIRTA", "titre": "Kakemono SIRTA"}, {"id": "14", "slug": "novation", "rubrique": "Novation Center", "titre": "Drahi - Une assistance attentive"}, {"id": "15", "slug": "novation", "rubrique": "Novation Center", "titre": "Drahi - Une assistance qui fatigue"}, {"id": "16", "slug": "novation", "rubrique": "Novation Center", "titre": "X-Novation Center et jeune start-upper"}, {"id": "17", "slug": "novation", "rubrique": "Novation Center", "titre": "Présentation X'Fab (1)"}, {"id": "18", "slug": "novation", "rubrique": "Novation Center", "titre": "Présentation X'Fab (2)"}, {"id": "19", "slug": "campus", "rubrique": "Campus Tour", "titre": "Photo jeune accompagnateur"}, {"id": "20", "slug": "campus", "rubrique": "Campus Tour", "titre": "Les bâtiments des élèves"}, {"id": "21", "slug": "campus", "rubrique": "Campus Tour", "titre": "BEM"}, {"id": "22", "slug": "campus", "rubrique": "Campus Tour", "titre": "ENSTA"}, {"id": "23", "slug": "campus", "rubrique": "Campus Tour", "titre": "Pôle Mécanique"}, {"id": "24", "slug": "campus", "rubrique": "Campus Tour", "titre": "ENSAE"}, {"id": "25", "slug": "campus", "rubrique": "Campus Tour", "titre": "Institut d'optique"}, {"id": "26", "slug": "campus", "rubrique": "Campus Tour", "titre": "Telecom Sud Paris"}, {"id": "27", "slug": "campus", "rubrique": "Campus Tour", "titre": "INRIA"}, {"id": "28", "slug": "campus", "rubrique": "Campus Tour", "titre": "Thales R&T"}, {"id": "29", "slug": "campus", "rubrique": "Campus Tour", "titre": "Résidence Bachelor"}, {"id": "30", "slug": "campus", "rubrique": "Campus Tour", "titre": "Tour radar"}, {"id": "31", "slug": "campus", "rubrique": "Campus Tour", "titre": "Métro Polytechnique"}, {"id": "32", "slug": "campus", "rubrique": "Campus Tour", "titre": "Station Lozère"}, {"id": "33", "slug": "campus", "rubrique": "Campus Tour", "titre": "Route de Lozère"}, {"id": "34", "slug": "balade", "rubrique": "Balade nostalgique", "titre": "Plan de l'École"}, {"id": "35", "slug": "balade", "rubrique": "Balade nostalgique", "titre": "Les caserts"}, {"id": "36", "slug": "balade", "rubrique": "Balade nostalgique", "titre": "Olivier devant le casert Rugby"}, {"id": "37", "slug": "balade", "rubrique": "Balade nostalgique", "titre": "Section football à la place de la section Rugby"}, {"id": "38", "slug": "balade", "rubrique": "Balade nostalgique", "titre": "La porte de la Kès"}, {"id": "39", "slug": "balade", "rubrique": "Balade nostalgique", "titre": "Horaires Kès"}, {"id": "40", "slug": "balade", "rubrique": "Balade nostalgique", "titre": "Le Bôbar"}, {"id": "41", "slug": "balade", "rubrique": "Balade nostalgique", "titre": "Le Bôbar (2)"}, {"id": "42", "slug": "balade", "rubrique": "Balade nostalgique", "titre": "Le Bôbar (3)"}, {"id": "43", "slug": "balade", "rubrique": "Balade nostalgique", "titre": "Signature des promotions au Bôbar"}, {"id": "44", "slug": "balade", "rubrique": "Balade nostalgique", "titre": "Signature de Bruno"}, {"id": "45", "slug": "diner", "rubrique": "Apéro et dîner", "titre": "Avant l'apéro"}, {"id": "46", "slug": "diner", "rubrique": "Apéro et dîner", "titre": "Avant l'apéro (2)"}, {"id": "47", "slug": "diner", "rubrique": "Apéro et dîner", "titre": "Le dîner"}, {"id": "48", "slug": "diner", "rubrique": "Apéro et dîner", "titre": "Le dîner (2)"}, {"id": "49", "slug": "origine", "rubrique": "Photos origine", "titre": "20260912_174805"}, {"id": "50", "slug": "origine", "rubrique": "Photos origine", "titre": "20260912_191257"}, {"id": "51", "slug": "origine", "rubrique": "Photos origine", "titre": "20260912_193601"}, {"id": "52", "slug": "origine", "rubrique": "Photos origine", "titre": "Photo 4"}, {"id": "53", "slug": "origine", "rubrique": "Photos origine", "titre": "Photo 5"}, {"id": "54", "slug": "origine", "rubrique": "Photos origine", "titre": "Photo 6"}, {"id": "55", "slug": "origine", "rubrique": "Photos origine", "titre": "Photo 7"}, {"id": "56", "slug": "origine", "rubrique": "Photos origine", "titre": "Photo 8"}, {"id": "57", "slug": "origine", "rubrique": "Photos origine", "titre": "Photo 9"}, {"id": "58", "slug": "origine", "rubrique": "Photos origine", "titre": "Photo 10"}, {"id": "59", "slug": "origine", "rubrique": "Photos origine", "titre": "Photo 11"}, {"id": "60", "slug": "origine", "rubrique": "Photos origine", "titre": "Photo 12"}];
+const ORDRE = [{"slug": "amphi", "label": "Amphi Présentation"}, {"slug": "sirta", "label": "SIRTA"}, {"slug": "novation", "label": "Novation Center"}, {"slug": "campus", "label": "Campus Tour"}, {"slug": "balade", "label": "Balade nostalgique"}, {"slug": "diner", "label": "Apéro et dîner"}, {"slug": "origine", "label": "Photos origine"}];
+
+const $ = id => document.getElementById(id);
+let courante = 'toutes';   // rubrique affichée
+let liste = [];            // photos de la vue courante
+let idx = -1;              // photo ouverte
+
+function nomFichier(p) {
+  const base = (p.titre + '').replace(/[\\/:*?"<>|]/g, '-').trim();
+  return 'X77 Palaiseau 2026 - ' + p.rubrique + ' - ' + base + '.jpg';
+}
+
+function menu() {
+  const nav = $('rubriques');
+  const items = [['toutes', 'Toutes les photos', PHOTOS.length], ...ORDRE.map(r => [r.slug, r.label, PHOTOS.filter(p => p.slug === r.slug).length])];
+  nav.innerHTML = '';
+  items.forEach(([slug, label, n], i) => {
+    const b = document.createElement('button');
+    b.className = 'rubrique' + (slug === courante ? ' active' : '');
+    b.innerHTML = '<span></span><span class="n">' + n + '</span>';
+    b.firstChild.textContent = label;
+    b.onclick = () => { courante = slug; fermer(); afficher(); menu(); history.replaceState(null, '', '#' + slug); };
+    nav.appendChild(b);
+    if (i === 0) { const s = document.createElement('div'); s.className = 'sep'; nav.appendChild(s); }
+  });
+}
+
+function vignette(p) {
+  const b = document.createElement('button');
+  b.className = 'thumb';
+  b.title = p.titre;
+  const img = document.createElement('img');
+  img.loading = 'lazy'; img.src = 'photos/thumb/' + p.id + '.jpg'; img.alt = p.titre;
+  const c = document.createElement('div'); c.className = 'cap'; c.textContent = p.titre;
+  b.append(img, c);
+  const k = liste.length; liste.push(p);
+  b.onclick = () => ouvrir(k);
+  return b;
+}
+
+function afficher() {
+  const g = $('grille');
+  g.innerHTML = ''; liste = [];
+  const groupes = courante === 'toutes' ? ORDRE : ORDRE.filter(r => r.slug === courante);
+  const label = courante === 'toutes' ? 'Toutes les photos' : groupes[0].label;
+  const n = courante === 'toutes' ? PHOTOS.length : PHOTOS.filter(p => p.slug === courante).length;
+  $('titre').innerHTML = ''; $('titre').append(label);
+  const sm = document.createElement('small'); sm.textContent = n + ' photo' + (n > 1 ? 's' : ''); $('titre').append(sm);
+  groupes.forEach(r => {
+    const ps = PHOTOS.filter(p => p.slug === r.slug);
+    if (!ps.length) return;
+    if (courante === 'toutes') { const h = document.createElement('div'); h.className = 'section-title'; h.textContent = r.label; g.appendChild(h); }
+    const grid = document.createElement('div'); grid.className = 'grid';
+    ps.forEach(p => grid.appendChild(vignette(p)));
+    g.appendChild(grid);
+  });
+  g.scrollTop = 0;
+}
+
+function ouvrir(k) {
+  idx = (k + liste.length) % liste.length;
+  const p = liste[idx];
+  $('vimg').src = 'photos/full/' + p.id + '.jpg';
+  $('vimg').alt = p.titre;
+  $('vtitle').innerHTML = '';
+  $('vtitle').append(p.titre);
+  const s = document.createElement('span'); s.textContent = p.rubrique + ' · ' + (idx + 1) + ' / ' + liste.length; $('vtitle').append(s);
+  $('dl').href = 'photos/full/' + p.id + '.jpg';
+  $('dl').setAttribute('download', nomFichier(p));
+  $('viewer').classList.add('open');
+  $('viewer').setAttribute('aria-hidden', 'false');
+  // précharge les voisines
+  [idx + 1, idx - 1].forEach(j => { const q = liste[(j + liste.length) % liste.length]; if (q) new Image().src = 'photos/full/' + q.id + '.jpg'; });
+}
+function fermer() { $('viewer').classList.remove('open'); $('viewer').setAttribute('aria-hidden', 'true'); idx = -1; }
+
+$('prec').onclick = () => ouvrir(idx - 1);
+$('suiv').onclick = () => ouvrir(idx + 1);
+$('fermer').onclick = fermer;
+$('vimg').onclick = () => ouvrir(idx + 1);
+document.addEventListener('keydown', e => {
+  if (idx < 0) return;
+  if (e.key === 'ArrowRight') ouvrir(idx + 1);
+  else if (e.key === 'ArrowLeft') ouvrir(idx - 1);
+  else if (e.key === 'Escape') fermer();
+});
+// balayage sur mobile
+let x0 = null;
+$('viewer').addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
+$('viewer').addEventListener('touchend', e => {
+  if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; x0 = null;
+  if (Math.abs(dx) > 50) ouvrir(idx + (dx < 0 ? 1 : -1));
+});
+
+// réglette de taille
+const r = $('taille');
+try { const v = localStorage.getItem('x77-taille'); if (v) r.value = v; } catch (e) {}
+const appliquer = () => document.documentElement.style.setProperty('--thumb', r.value + 'px');
+r.oninput = () => { appliquer(); try { localStorage.setItem('x77-taille', r.value); } catch (e) {} };
+appliquer();
+
+const h = location.hash.slice(1);
+if (ORDRE.some(o => o.slug === h)) courante = h;
+$('total').textContent = PHOTOS.length;
+menu(); afficher();
+</script>
+</body>
+</html>
