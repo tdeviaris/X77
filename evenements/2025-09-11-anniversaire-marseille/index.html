@@ -30,6 +30,11 @@
       text-align: center;
     }
     .audio-card .credits { color: var(--text-muted); font-size: 0.82rem; font-style: italic; margin: 10px 0 4px; }
+    .temps-forts { width: 100%; border-top: 1px solid rgba(148, 163, 184, 0.25); padding-top: 16px; }
+    .tf-titre { color: var(--accent); font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; margin-bottom: 8px; }
+    .tf { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; padding: 7px 0; border-bottom: 1px solid rgba(148, 163, 184, 0.12); }
+    .tf:last-child { border-bottom: 0; }
+    .tf span { display: block; color: var(--text-main); font-weight: 600; font-size: 0.92rem; }
     /* Photo dans le cadre de présentation */
     .audio-card .photo {
       width: 100%;
@@ -55,6 +60,13 @@
           </video>
           <figcaption>Réalisée par Stéphanie Moser à partir des images des participants (9 min 37)</figcaption>
         </figure>
+        <div class="temps-forts">
+          <div class="tf-titre">Les temps forts</div>
+          <div class="tf"><span>Jeudi 11</span>Retrouvailles à Notre-Dame de la Garde, descente par le Bois sacré et cocktail « Chez Jeannot » au Vallon des Auffes.</div>
+          <div class="tf"><span>Vendredi 12</span>Grotte Cosquer, Compagnie du Ponant ou Jivaro Sailing Team ; balade guidée dans le Panier ; dîner-débat avec le général David Galtier sur la sécurité à Marseille.</div>
+          <div class="tf"><span>Samedi 13</span>Croisière dans les calanques avec déjeuner à bord, puis dîner de gala à l'Union Nautique Marseillaise : résultats de l'enquête de promotion et remise de l'ouvrage de l'anniversaire.</div>
+          <div class="tf"><span>Dimanche 14</span>Messe à l'abbaye Saint-Victor et cocktail de clôture au Château Saint-Victor, résidence du gouverneur militaire.</div>
+        </div>
       </div>
 
       <!-- Colonne droite : présentation et documents -->
@@ -70,13 +82,8 @@
           <img class="photo" src="couverture.jpg" alt="Le Vallon des Auffes à la tombée du jour – anniversaire X77 à Marseille">
 
           <p class="description">
-            On ne pouvait pas attendre le cinquantième&nbsp;: la promotion X77 a fêté son 48<sup>e</sup> anniversaire à Marseille.
-            Quatre jours de retrouvailles, de visites et d'échanges&nbsp;: Notre-Dame de la Garde et le cocktail du Vallon des Auffes,
-            la Grotte Cosquer, la Compagnie du Ponant ou le Jivaro Sailing Team et son engagement auprès des personnes aphasiques,
-            la grande balade dans le Panier, le dîner-débat avec le général David Galtier sur la sécurité à Marseille,
-            la croisière dans les calanques, le dîner de gala à l'Union Nautique Marseillaise et le cocktail de clôture
-            au Château Saint-Victor. Lors de la grande soirée, la promotion a découvert les résultats de son enquête traditionnelle
-            et reçu l'ouvrage de l'anniversaire, réunissant les récits de vie des camarades et le trombinoscope mis à jour.
+            On ne pouvait pas attendre le cinquantième&nbsp;: la promotion X77 a fêté son 48<sup>e</sup> anniversaire à Marseille,
+            quatre jours de retrouvailles, de visites et d'échanges sous un soleil radieux. Revivez-les en vidéo, en photos et dans le programme détaillé.
           </p>
 
           <p class="credits">Photos : Patrick Tejedor, Tristan de Viaris et partages des participants. Vidéo : Stéphanie Moser.</p>
@@ -86,7 +93,7 @@
               <span class="button-icon">📷</span>
               Album photo, jour par jour
             </a>
-            <a class="button" href="photos.html#trombi" target="_blank">
+            <a class="button" href="trombinoscope.html" target="_blank">
               <span class="button-icon">👥</span>
               Trombinoscope des présents
             </a>
